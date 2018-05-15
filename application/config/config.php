@@ -44,7 +44,7 @@ $config['index_page'] = '';
 */
 $config['tiket_api_url_dev'] = 'http://api-sandbox.tiket.com/';
 $config['tiket_api_url_prod'] = '';
-$config['tiket_api_key'] = '3a5f469b4e843757e38a565889d019c10150556e';
+$config['tiket_api_key'] = '';
 
 /*
 |--------------------------------------------------------------------------
