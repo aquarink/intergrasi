@@ -1,0 +1,314 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class FlightAPI extends CI_Controller { 
+
+	function __construct() 
+	{
+		parent::__construct();
+
+		$this->load->helper('url');
+		$this->load->helper('html');
+		$this->load->helper('form');
+
+		$this->load->library('session');
+		$this->load->library('user_agent');
+		$this->load->library('form_validation');
+
+		$this->load->model('Request_Model');
+		$this->load->model('Token_Model');
+
+		$this->load->model('Flight_Model');
+	}
+
+	public function index()
+	{
+		echo "Forbhident access : 404";
+	}
+
+	public function Search_Flight()
+	{
+		$token_tiket = $this->config->item('tiket_api_key');
+		$validate_token = $this->Token_Model->validateToken($token_tiket);
+
+		if($validate_token) {
+			// TRUE
+			$url = $this->config->item('tiket_api_url_dev');
+			$param = "search/flight";
+			$depature = "?d=CGK";
+			$arrival = "&a=DPS";
+			$dateGo = "&date=2018-05-15";
+			$dateReturn = "&ret_date=2018-05-20";
+			$adult = "&adult=1";
+			$child = "&child=0";
+			$infant = "&infant=0";
+			$version = "&v=3";
+			$key = "&token=".$this->config->item('tiket_api_key');
+			$format = "&output=json";
+
+			$request = $url.$param.$depature.$arrival.$dateGo.$dateReturn.$adult.$child.$infant.$version.$key.$format;
+
+			$getResponse = $this->Request_Model->httpGet($request);
+
+			$flights = json_decode($getResponse, true);
+
+			foreach ($flights['departures']['result'] as $key => $value) {
+				foreach ($value['flight_infos']['flight_info'] as $k => $v) {
+					// FIRST
+					$findResult['departures'][$v['flight_number']]['flight_id'] = $value['flight_id'];
+					$findResult['departures'][$v['flight_number']]['stop'] = $value['stop'];
+					$findResult['departures'][$v['flight_number']]['airlines_name'] = $value['airlines_name'];
+					// PRICE
+					$findResult['departures'][$v['flight_number']]['price']['price_value'] = $value['price_value'];
+					$findResult['departures'][$v['flight_number']]['price']['price_adult'] = $value['price_adult'];
+					$findResult['departures'][$v['flight_number']]['price']['price_child'] = $value['price_child'];
+					$findResult['departures'][$v['flight_number']]['price']['price_infant'] = $value['price_infant'];
+
+					// SECOND
+					// FROM
+					$findResult['departures'][$v['flight_number']]['flight_number'] = $v['flight_number'];
+					$findResult['departures'][$v['flight_number']]['departure_city'] = $v['departure_city'];
+					$findResult['departures'][$v['flight_number']]['departure_city_name'] = $v['departure_city_name'];
+					$findResult['departures'][$v['flight_number']]['departure_airport_name'] = $v['departure_airport_name'];
+					$findResult['departures'][$v['flight_number']]['departure_airport_terminal'] = $v['terminal'];
+					$findResult['departures'][$v['flight_number']]['departure_date_time'] = $v['departure_date_time'];
+					// TO
+					$findResult['departures'][$v['flight_number']]['arrival_city'] = $v['arrival_city'];
+					$findResult['departures'][$v['flight_number']]['departure_city_name'] = $v['arrival_city_name'];
+					$findResult['departures'][$v['flight_number']]['arrival_airport_name'] = $v['arrival_airport_name'];
+					$findResult['departures'][$v['flight_number']]['arrival_date_time'] = $v['arrival_date_time'];
+					// Thumbnail
+					$findResult['departures'][$v['flight_number']]['img_src'] = $v['img_src'];
+					// DURATION
+					$findResult['departures'][$v['flight_number']]['duration_second'] = $v['duration_time'];
+					$findResult['departures'][$v['flight_number']]['duration_minute'] = $v['duration_minute'];
+					$findResult['departures'][$v['flight_number']]['duration_hour'] = $v['duration_hour'];
+					// BAGASI
+					$findResult['departures'][$v['flight_number']]['check_in_baggage'] = $v['check_in_baggage'];
+					$findResult['departures'][$v['flight_number']]['check_in_baggage_unit'] = $v['check_in_baggage_unit'];
+				}
+			}
+
+
+			foreach ($flights['returns']['result'] as $key => $value) {
+				foreach ($value['flight_infos']['flight_info'] as $k => $v) {
+					// FIRST
+					$findResult['returns'][$v['flight_number']]['flight_id'] = $value['flight_id'];
+					$findResult['returns'][$v['flight_number']]['stop'] = $value['stop'];
+					$findResult['returns'][$v['flight_number']]['airlines_name'] = $value['airlines_name'];
+					// PRICE
+					$findResult['returns'][$v['flight_number']]['price']['price_value'] = $value['price_value'];
+					$findResult['returns'][$v['flight_number']]['price']['price_adult'] = $value['price_adult'];
+					$findResult['returns'][$v['flight_number']]['price']['price_child'] = $value['price_child'];
+					$findResult['returns'][$v['flight_number']]['price']['price_infant'] = $value['price_infant'];
+
+					// SECOND
+					// FROM
+					$findResult['returns'][$v['flight_number']]['flight_number'] = $v['flight_number'];
+					$findResult['returns'][$v['flight_number']]['departure_city'] = $v['departure_city'];
+					$findResult['returns'][$v['flight_number']]['departure_city_name'] = $v['departure_city_name'];
+					$findResult['returns'][$v['flight_number']]['departure_airport_name'] = $v['departure_airport_name'];
+					$findResult['returns'][$v['flight_number']]['departure_airport_terminal'] = $v['terminal'];
+					$findResult['returns'][$v['flight_number']]['departure_date_time'] = $v['departure_date_time'];
+					// TO
+					$findResult['returns'][$v['flight_number']]['arrival_city'] = $v['arrival_city'];
+					$findResult['returns'][$v['flight_number']]['departure_city_name'] = $v['arrival_city_name'];
+					$findResult['returns'][$v['flight_number']]['arrival_airport_name'] = $v['arrival_airport_name'];
+					$findResult['returns'][$v['flight_number']]['arrival_date_time'] = $v['arrival_date_time'];
+					// Thumbnail
+					$findResult['returns'][$v['flight_number']]['img_src'] = $v['img_src'];
+					// DURATION
+					$findResult['returns'][$v['flight_number']]['duration_second'] = $v['duration_time'];
+					$findResult['returns'][$v['flight_number']]['duration_minute'] = $v['duration_minute'];
+					$findResult['returns'][$v['flight_number']]['duration_hour'] = $v['duration_hour'];
+					// BAGASI
+					$findResult['returns'][$v['flight_number']]['check_in_baggage'] = $v['check_in_baggage'];
+					$findResult['returns'][$v['flight_number']]['check_in_baggage_unit'] = $v['check_in_baggage_unit'];
+				}
+			}
+
+			echo json_encode($findResult);
+		}
+	}
+
+	public function Get_Nearest_Airport()
+	{
+		$token_tiket = $this->config->item('tiket_api_key');
+		$validate_token = $this->Token_Model->validateToken($token_tiket);
+
+		// IP
+		$ipaddress = '61.94.127.202';
+		// if (isset($_SERVER['HTTP_CLIENT_IP'])) {
+		// 	$ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+		// }
+		// else if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+		// 	$ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		// }
+		// else if(isset($_SERVER['HTTP_X_FORWARDED'])) {
+		// 	$ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+		// }
+		// else if(isset($_SERVER['HTTP_FORWARDED_FOR'])) {
+		// 	$ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+		// }
+		// else if(isset($_SERVER['HTTP_FORWARDED'])) {
+		// 	$ipaddress = $_SERVER['HTTP_FORWARDED'];
+		// }
+		// else if(isset($_SERVER['REMOTE_ADDR'])) {
+		// 	$ipaddress = $_SERVER['REMOTE_ADDR'];
+		// }
+		// else {
+		// 	$ipaddress = 'UNKNOWN';
+		// }
+
+		if($validate_token) {
+			// TRUE
+			$url = $this->config->item('tiket_api_url_dev');
+			$param = "flight_api/getNearestAirport";
+			$key = "?token=".$this->config->item('tiket_api_key');
+			$ip = "&ip=$ipaddress";
+			$format = "&output=json";
+
+			$request = $url.$param.$key.$ip.$format;
+
+			$getResponse = $this->Request_Model->httpGet($request);
+
+			$nearestAirport  = json_decode($getResponse, true);
+
+			foreach ($nearestAirport['search'] as $key => $value) {
+				// USER INFORM
+				$user[] = $value;
+			}
+
+				$nearAirport[$user[0]]['latitude'] = $user[1];
+				$nearAirport[$user[0]]['longitude'] = $user[2];
+
+				foreach ($nearestAirport['nearest_airports']['airport'] as $k => $v) {
+					// FIRST
+					$nearAirport[$user[0]]['airport_code'] = $v['airport_code'];
+					$nearAirport[$user[0]]['airport_city'] = $v['location_name'];
+					$nearAirport[$user[0]]['airport_name'] = $v['business_name'];	
+					$nearAirport[$user[0]]['distance'] = $v['distance'];		
+				}
+
+			echo json_encode($nearAirport);
+		}
+	}
+	public function Get_Popular_Airport_Destination()
+	{
+
+	}
+
+	public function Search_Airport()
+	{
+		$token_tiket = $this->config->item('tiket_api_key');
+		$validate_token = $this->Token_Model->validateToken($token_tiket);
+
+		if($validate_token) {
+			// TRUE
+			$search = 'soeka';
+			$find = $this->Flight_Model->searchAirportLike($search);
+
+			echo json_encode($find);
+		}
+	}
+	public function Insert_Airport()
+	{
+		$token_tiket = $this->config->item('tiket_api_key');
+		$validate_token = $this->Token_Model->validateToken($token_tiket);
+
+		if($validate_token) {
+			$url = $this->config->item('tiket_api_url_dev');
+			$param = "flight_api/all_airport";
+			$key = "?token=".$this->config->item('tiket_api_key');
+			$format = "&output=json";
+
+			$request = $url.$param.$key.$format;
+
+			$getResponse = $this->Request_Model->httpGet($request);
+
+			$allAirports = json_decode($getResponse, true);
+
+			foreach ($allAirports['all_airport']['airport'] as $key => $value) {
+
+				$checkAirports = $this->Flight_Model->searchAirportAPI($value['airport_code'],$value['airport_name'],$value['country_id'],$value['country_name']);
+
+				if(count($checkAirports) == 0) {
+					$this->Flight_Model->insertNewAirport($value['airport_code'],$value['airport_name'],$value['country_id'],$value['country_name'],date('Y-m-d H:i:s'));
+				}			
+			}
+
+			echo "OK";
+		}
+	}
+	public function Check_Update()
+	{
+		echo "Access Permission need more";
+	}
+
+	public function Get_Lion_Captcha()
+	{
+		echo "Access Permission need more";
+	}
+	public function Get_Flight_Data()
+	{
+		$token_tiket = $this->config->item('tiket_api_key');
+		$validate_token = $this->Token_Model->validateToken($token_tiket);
+
+		if($validate_token) {
+			// TRUE
+			$url = $this->config->item('tiket_api_url_dev');
+			$param = "flight_api/get_flight_data";
+			$flightId = "?flight_id=16825942";
+			$key = "&token=".$this->config->item('tiket_api_key');
+			$dateGo = "&date=2018-05-15";
+			$version = "&v=3";			
+			$format = "&output=json";
+
+			$request = $url.$param.$flightId.$key.$dateGo.$version.$format;
+
+			$getResponse = $this->Request_Model->httpGet($request);
+
+			$checkFlight = json_decode($getResponse, true);
+
+			echo "<pre>";
+			print_r($checkFlight);
+
+			echo "Dummy Flight ID not found";
+		}
+	}
+
+	public function Flight_Add_Order()
+	{
+		echo "Access Permission need more";
+	}
+	public function Flight_Order()
+	{
+		echo "Access Permission need more";
+	}
+
+	public function Delete_Order()
+	{
+		echo "Access Permission need more";
+	}
+	public function Flight_Checkout_Page_Request()
+	{
+		echo "Access Permission need more";
+	}
+	public function Flight_Checkout_Login()
+	{
+		echo "Access Permission need more";
+	}
+	public function Flight_Checkout_Costumer()
+	{
+		echo "Access Permission need more";
+	}
+
+	public function Flight_Available_Payment()
+	{
+		echo "Access Permission need more";
+	}
+	public function Flight_Checkout_Payment()
+	{
+		echo "Access Permission need more";
+	}
+}
