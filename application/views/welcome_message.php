@@ -22,7 +22,44 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   <![endif]-->
 </head>
 <body>
-	<h1>Hello, world!</h1>
+	
+
+	<div class="container">
+		<div class="row">
+			<div>
+
+				<h1>Abu Nawas</h1>
+
+				<!-- Nav tabs -->
+				<ul class="nav nav-tabs" role="tablist">
+					<li role="presentation" class="active"><a href="#Pesawat" aria-controls="Pesawat" role="tab" data-toggle="tab">Pesawat</a></li>
+					<li role="presentation"><a href="#KeretaAPi" aria-controls="KeretaAPi" role="tab" data-toggle="tab">Kereta APi</a></li>
+					<li role="presentation"><a href="#Hotel" aria-controls="Hotel" role="tab" data-toggle="tab">Hotel</a></li>
+				</ul>
+
+				<!-- Tab panes -->
+				<div class="tab-content">
+					<div role="tabpanel" class="tab-pane fade active" id="Pesawat">
+						<div class="row">
+							form pencarian tiket pesawat
+						</div>
+					</div>
+					<div role="tabpanel" class="tab-pane fade" id="KeretaAPi">
+						<div class="row">
+							form pencarian tiket kereta api
+						</div>
+					</div>
+					<div role="tabpanel" class="tab-pane fade" id="Hotel">
+						<div class="row">
+							form pencarian hotel
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
