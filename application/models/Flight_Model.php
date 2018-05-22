@@ -38,7 +38,7 @@ class Flight_Model extends CI_Model {
         return $query->result();
     }
 
-    public function searchAirportLike($search)
+    public function searchAirportLike($search) 
     {
     	$sql = "SELECT * FROM tiket_api_flight_airports WHERE airport_code LIKE '%".$search."%' OR airport_name LIKE '%".$search."%' OR country_name LIKE '%".$search."%' ORDER BY airport_name ASC";
         $query = $this->db->query($sql);

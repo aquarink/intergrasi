@@ -106,3 +106,6 @@ $route['TrainRegister'] = 'TrainAPI/Train_Register';
 $route['TrainSearchPromo'] = 'TrainAPI/Train_Search_Promo';
 $route['TrainChangeTrainSeat'] = 'TrainAPI/Train_Change_TrainSeat';
 
+// Train API
+$route['topup'] = 'CyruskuAPI/Top_Up';
+

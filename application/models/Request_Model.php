@@ -43,6 +43,38 @@ class Request_Model extends CI_Model {
         return $output;
     }
 
+    public function httpPostXML($url,$xml) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt ($ch, CURLOPT_HTTPHEADER, Array("Content-Type: text/xml"));
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+        
+        $output = curl_exec($ch);
+        
+        curl_close($ch);
+        return $output;
+    }
+
+    public function arrayToXml($array, $rootElement = null, $xml = null) {
+        $_xml = $xml;
+     
+        if ($_xml === null) {
+            $_xml = new SimpleXMLElement($rootElement !== null ? $rootElement : '<root/>');
+        }
+     
+        foreach ($array as $k => $v) {
+            if (is_array($v)) { //nested array
+                arrayToXml($v, $k, $_xml->addChild($k));
+            } else {
+                $_xml->addChild($k, $v);
+            }
+        }
+     
+        return $_xml->asXML();
+    }
+
     public function imageFromUrl($image_url, $image_path) {
         $fp = fopen ($image_path, 'w+');
 

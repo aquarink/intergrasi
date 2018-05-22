@@ -43,8 +43,8 @@ $config['index_page'] = '';
 |--------------------------------------------------------------------------
 */
 $config['tiket_api_url_dev'] = 'http://api-sandbox.tiket.com/';
-$config['tiket_api_url_prod'] = '';
-$config['tiket_api_key'] = '';
+$config['tiket_api_url_prod'] = '7f7c0f2a553733038d2680284a2e0bdd962e076b';
+$config['tiket_secret_key'] = 'a08e0ceee3665065e36b7b038bdfd03e';
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +52,15 @@ $config['tiket_api_key'] = '';
 |--------------------------------------------------------------------------
 */
 $config['rpx_api_key'] = '';
+
+/*
+|--------------------------------------------------------------------------
+| Cyrusku API TOKEN
+|--------------------------------------------------------------------------
+*/
+$config['cyrusku_api_url_dev'] = 'http://api-sandbox.tiket.com/';
+$config['cyrusku_api_url_prod'] = '7f7c0f2a553733038d2680284a2e0bdd962e076b';
+$config['cyrusku_secret_key'] = 'a08e0ceee3665065e36b7b038bdfd03e';
 
 /*
 |--------------------------------------------------------------------------
