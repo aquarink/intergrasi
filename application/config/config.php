@@ -58,9 +58,9 @@ $config['rpx_api_key'] = '';
 | Cyrusku API TOKEN
 |--------------------------------------------------------------------------
 */
-$config['cyrusku_api_url'] = 'http://api-sandbox.tiket.com/';
-$config['cyrusku_api_username'] = '7f7c0f2a553733038d2680284a2e0bdd962e076b';
-$config['cyrusku_api_password'] = 'a08e0ceee3665065e36b7b038bdfd03e';
+$config['cyrusku_api_url'] = 'https://cyrusku.cyruspad.com/interkoneksi/productcyrusku.asp';
+$config['cyrusku_api_username'] = '6282298407898';
+$config['cyrusku_api_password'] = '496654';
 
 /*
 |--------------------------------------------------------------------------

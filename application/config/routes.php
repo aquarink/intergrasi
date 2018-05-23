@@ -107,9 +107,10 @@ $route['TrainSearchPromo'] = 'TrainAPI/Train_Search_Promo';
 $route['TrainChangeTrainSeat'] = 'TrainAPI/Train_Change_TrainSeat';
 
 // Train API
-$route['CyruskuTopUp'] = 'CyruskuAPI/Top_Up';
-$route['CyruskuSn'] = 'CyruskuAPI/S_N';
-$route['CyruskuReversal'] = 'CyruskuAPI/Reversal';
-$route['CyruskuCekTagihan'] = 'CyruskuAPI/Cek_Tagihan';
-$route['CyruskuBayarTagihan'] = 'CyruskuAPI/Bayar_Tagihan';
+$route['CyruskuTopUp'] = 'CyruskuAPI/Cyrusku_Top_Up';
+$route['CyruskuSn'] = 'CyruskuAPI/Cyrusku_Sn';
+$route['CyruskuReversal'] = 'CyruskuAPI/Cyrusku_Reversal';
+$route['CyruskuCekTagihan'] = 'CyruskuAPI/Cyrusku_Cek_Tagihan';
+$route['CyruskuBayarTagihan'] = 'CyruskuAPI/Cyrusku_Bayar_Tagihan';
+$route['CyruskuBCekSaldo'] = 'CyruskuAPI/Cyrusku_Cek_Saldo';
 

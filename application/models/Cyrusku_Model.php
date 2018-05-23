@@ -7,14 +7,15 @@ class Cyrusku_Model extends CI_Model {
         $this->load->database();
     }
 
-    public function insertTrx($command,$product,$msisdn,$trxid,$signature,$rs_result,$rs_msg,$rs_trxid,$dr_sn,$send_type)
+    public function insertTrx($command,$product,$amount,$msisdn,$trxid,$signature,$rs_result,$rs_msg,$rs_trxid,$dr_sn,$send_type)
     {
         $trx_datetime = date('Y-m-d H:i:s');
 
-    	$sql = "INSERT INTO cyrusku_api_trx(command,product,msisdn,trxid,signature,rs_result,rs_msg,rs_trxid,dr_sn,send_type,trx_datetime) "
+    	$sql = "INSERT INTO cyrusku_api_trx(command,product,amount,msisdn,trxid,signature,rs_result,rs_msg,rs_trxid,dr_sn,send_type,trx_datetime) "
                 . "VALUES("
                 . "" . $this->db->escape($command) . ", "
                 . "" . $this->db->escape($product) . ", "
+                . "" . $this->db->escape($amount) . ", "
                 . "" . $this->db->escape($msisdn) . ", "
                 . "" . $this->db->escape($trxid) . ", "
                 . "" . $this->db->escape($signature) . ", "
@@ -36,9 +37,9 @@ class Cyrusku_Model extends CI_Model {
         return $this->db->affected_rows();
     }
 
-    public function searchAirportAPI($airport_code,$airport_name,$country_id,$country_name)
+    public function searchReversal($rs_trxid,$trxid,$msisdn)
     {
-    	$sql = "SELECT * FROM tiket_api_flight_airports WHERE airport_code = " . $this->db->escape($airport_code) . " AND airport_name = " . $this->db->escape($airport_name) . " AND country_id = " . $this->db->escape($country_id) . " AND country_name = " . $this->db->escape($country_name) . "";
+    	$sql = "SELECT product,msisdn FROM cyrusku_api_trx WHERE msisdn = " . $this->db->escape($msisdn) . " AND trxid = " . $this->db->escape($trxid) . " AND rs_trxid = " . $this->db->escape($rs_trxid) . " LIMIT 1";
         $query = $this->db->query($sql);
         return $query->result();
     }

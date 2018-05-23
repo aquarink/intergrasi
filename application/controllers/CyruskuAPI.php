@@ -17,6 +17,8 @@ class CyruskuAPI extends CI_Controller {
 
 		$this->load->model('Request_Model');
 		$this->load->model('Token_Model');
+
+		$this->load->model('Cyrusku_Model');
 	}
 
 	public function index()
@@ -24,11 +26,12 @@ class CyruskuAPI extends CI_Controller {
 		echo "Forbhident access : 404";
 	}
 
-	public function Top_Up()
+	public function Cyrusku_Top_Up()
 	{	
 		$url = $this->config->item('cyrusku_api_url');
-		$msisdn = '081510193960';
-		$productid = 'zz';
+		$msisdn = $this->input->get('msisdn');
+		$productid = $this->input->get('product');
+		$amount = $this->input->get('amount');
 		$userid = $this->config->item('cyrusku_api_username');
 		$password = $this->config->item('cyrusku_api_password');
 		$time = date('His');
@@ -44,35 +47,44 @@ class CyruskuAPI extends CI_Controller {
 		$valueXml .= '<userid>'.$userid.'</userid>';
 		$valueXml .= '<time>'.$time.'</time>';
 		$valueXml .= '<msisdn>'.$msisdn.'</msisdn>';
-		$valueXml .= '<partner_trxid>'.$productid.'</partner_trxid>';
+		$valueXml .= '<partner_trxid>'.$trxid.'</partner_trxid>';
 		$valueXml .= '<signature>'.$signature.'</signature></evoucher>';
 
 		// Request
 		$send = $this->Request_Model->httpPostXML($url,$valueXml);
-		print_r($send);
-		// Response XML
-		// $responseXml = new SimpleXMLElement($valueXml);
-		
-		// <result>0</result>
-		// <msg> BERHASIL: Isi pulsa berhasil. No trx: 10001 (Rp 19750). Saldo: Rp xxx. No HP: 0812345678.</msg>
-		// <trxid>10001</trxid>
-		// <partner_trxid>12345</partner_trxid> 
+		// Array ( [status] => 301 [output] => ) 
+		if($send['status'] == 200) {
+			// Response XML
+			$responseXml = new SimpleXMLElement($valueXml);	
+			
+			// <result>0</result>
+			// <msg> BERHASIL: Isi pulsa berhasil. No trx: 10001 (Rp 19750). Saldo: Rp xxx. No HP: 0812345678.</msg>
+			// <trxid>10001</trxid>
+			// <partner_trxid>12345</partner_trxid> 
+			$rs_result = $responseXml['result'];
+			$rs_msg = $responseXml['msg'];
+			$rs_trxid = $responseXml['trxid'];
+			$dr_sn = '';
+			$send_type = 'ori';
 
-		// INSERT
+			// INSERT
+			$trxSave = $this->Cyrusku_Model->insertTrx('TOPUP',$productid,$amount,$msisdn,$trxid,$signature,$rs_result,$rs_msg,$rs_trxid,$dr_sn,$send_type);
+		}
 	}
-	public function S_N()
+	public function Cyrusku_Sn()
 	{
 		// trxid=CyruskuTrxId&partner_trxid=TRXID&msg=pesan_cyrusku_berisi_sn
 		$rs_trxid = $this->input->get('trxid');
 		$trxid = $this->input->get('partner_trxid');
 		$msg = $this->input->get('msg');
 		$msgExpl = explode("S/N",$msg);
-		$sn = $msgExpl[1];
+		$dr_sn = $msgExpl[1];
 
 		// UPDATE SN
+		$updSn = $this->Cyrusku_Model->updateSn($rs_trxid,$trxid,$dr_sn);
 
 	}
-	public function Reversal()
+	public function Cyrusku_Reversal()
 	{
 		// ?result=11&msg=Reversal&trxid=10001&partner_trxid=12345&msisdn=62812 345678 
 		$rs_trxid = $this->input->get('trxid');
@@ -80,14 +92,60 @@ class CyruskuAPI extends CI_Controller {
 		$msisdn = $this->input->get('msisdn');
 
 		// KIRIM ULANG
+		$reversal = $this->Cyrusku_Model->searchReversal($rs_trxid,$trxid,$msisdn);
+		foreach ($reversal as $key => $value) {
+			$url = $this->config->item('cyrusku_api_url');
+			$msisdn = $value->msisdn;
+			$productid = $value->product;
+			$amount = $this->input->get('amount');
+			$userid = $this->config->item('cyrusku_api_username');
+			$password = $this->config->item('cyrusku_api_password');
+			$time = date('His');
+			$lastMsisdn = substr($msisdn, -4);
+			$reverse = strrev(substr($msisdn, -4));
+			$result = $time.$lastMsisdn XOR $reverse.$password;
+			$trxid = date('YmdHis');
+			$signature = base64_encode($result);
+
+			$valueXml = '<?xml version="1.0" ?><evoucher>';
+			$valueXml .= '<command>TOPUP</command>';
+			$valueXml .= '<product>'.$productid.'</product>';
+			$valueXml .= '<userid>'.$userid.'</userid>';
+			$valueXml .= '<time>'.$time.'</time>';
+			$valueXml .= '<msisdn>'.$msisdn.'</msisdn>';
+			$valueXml .= '<partner_trxid>'.$trxid.'</partner_trxid>';
+			$valueXml .= '<signature>'.$signature.'</signature></evoucher>';
+
+			// Request
+			$send = $this->Request_Model->httpPostXML($url,$valueXml);
+			// Array ( [status] => 301 [output] => ) 
+			if($send['status'] == 200) {
+				// Response XML
+				$responseXml = new SimpleXMLElement($valueXml);	
+				
+				// <result>0</result>
+				// <msg> BERHASIL: Isi pulsa berhasil. No trx: 10001 (Rp 19750). Saldo: Rp xxx. No HP: 0812345678.</msg>
+				// <trxid>10001</trxid>
+				// <partner_trxid>12345</partner_trxid> 
+				$rs_result = $responseXml['result'];
+				$rs_msg = $responseXml['msg'];
+				$rs_trxid = $responseXml['trxid'];
+				$dr_sn = '';
+				$send_type = 'rev';
+
+				// INSERT
+				$trxSave = $this->Cyrusku_Model->insertTrx('TOPUP',$productid,$amount,$msisdn,$trxid,$signature,$rs_result,$rs_msg,$rs_trxid,$dr_sn,$send_type);
+			}
+		}
 
 	}
 
-	public function Cek_Tagihan()
+	public function Cyrusku_Cek_Tagihan()
 	{
 		$url = $this->config->item('cyrusku_api_url');
-		$msisdn = '081510193960';
+		$msisdn = $this->input->get('msisdn');
 		$productid = 'PLN';
+		$amount = '';
 		$userid = $this->config->item('cyrusku_api_username');
 		$password = $this->config->item('cyrusku_api_password');
 		$time = date('His');
@@ -103,29 +161,41 @@ class CyruskuAPI extends CI_Controller {
 		$valueXml .= '<userid>'.$userid.'</userid>';
 		$valueXml .= '<time>'.$time.'</time>';
 		$valueXml .= '<msisdn>'.$msisdn.'</msisdn>';
-		$valueXml .= '<partner_trxid>'.$productid.'</partner_trxid>';
+		$valueXml .= '<partner_trxid>'.$trxid.'</partner_trxid>';
 		$valueXml .= '<signature>'.$signature.'</signature></evoucher>';
 
 		// Request
 		$send = $this->Request_Model->httpPostXML($url,$valueXml);
-		print_r($send);
-		// Response XML
-		// $responseXml = new SimpleXMLElement($valueXml);
-		
-		// <result>0</result>
-		// <msg> BERHASIL: Isi pulsa berhasil. No trx: 10001 (Rp 19750). Saldo: Rp xxx. No HP: 0812345678.</msg>
-		// <trxid>10001</trxid>
-		// <partner_trxid>12345</partner_trxid>
-		// <amount>92072</amount> jumlah tagihan yang harus dibayar
-		// <ori_amount>90072</ori_amount> jumlah tagihan tanpa biaya admin
-		// <admin_fee>2000</admin_fee> biaya admin 
+		// Array ( [status] => 301 [output] => ) 
+		if($send['status'] == 200) {
+			// Response XML
+			$responseXml = new SimpleXMLElement($valueXml);
+			
+			// <result>0</result>
+			// <msg> BERHASIL: Isi pulsa berhasil. No trx: 10001 (Rp 19750). Saldo: Rp xxx. No HP: 0812345678.</msg>
+			// <trxid>10001</trxid>
+			// <partner_trxid>12345</partner_trxid>
+			// <amount>92072</amount> jumlah tagihan yang harus dibayar
+			// <ori_amount>90072</ori_amount> jumlah tagihan tanpa biaya admin
+			// <admin_fee>2000</admin_fee> biaya admin 
+			$rs_result = $responseXml['result'];
+			$rs_msg = $responseXml['msg'];
+			$rs_trxid = $responseXml['trxid'];
+			$dr_sn = '';
+			$send_type = 'ori';
+
+			$amount = $responseXml['amount'];
+
+			// INSERT
+			$trxSave = $this->Cyrusku_Model->insertTrx('CEK',$productid,$amount,$msisdn,$trxid,$signature,$rs_result,$rs_msg,$rs_trxid,$dr_sn,$send_type);
+		}
 	}
-	public function Bayar_Tagihan()
+	public function Cyrusku_Bayar_Tagihan()
 	{
 		$url = $this->config->item('cyrusku_api_url');
-		$msisdn = '081510193960';
+		$msisdn = $this->input->get('msisdn')
 		$productid = 'PLN';
-		$amount = '20000';
+		$amount = '';
 		$userid = $this->config->item('cyrusku_api_username');
 		$password = $this->config->item('cyrusku_api_password');
 		$time = date('His');
@@ -141,21 +211,32 @@ class CyruskuAPI extends CI_Controller {
 		$valueXml .= '<userid>'.$userid.'</userid>';
 		$valueXml .= '<time>'.$time.'</time>';
 		$valueXml .= '<msisdn>'.$msisdn.'</msisdn>';
-		$valueXml .= '<partner_trxid>'.$productid.'</partner_trxid>';
+		$valueXml .= '<partner_trxid>'.$trxid.'</partner_trxid>';
 		$valueXml .= '<amount>'.$amount.'</amount>';
 		$valueXml .= '<signature>'.$signature.'</signature></evoucher>';
 
 		// Request
 		$send = $this->Request_Model->httpPostXML($url,$valueXml);
-		print_r($send);
-		// Response XML
-		// $responseXml = new SimpleXMLElement($valueXml);
-		
-		// <result>0</result>
-		// <msg> BERHASIL: Isi pulsa berhasil. No trx: 10001 (Rp 19750). Saldo: Rp xxx. No HP: 0812345678.</msg>
-		// <trxid>10001</trxid>
-		// <partner_trxid>12345</partner_trxid>
-		// <amount>92072</amount> jumlah tagihan yang dibayar 
+		// Array ( [status] => 301 [output] => ) 
+		if($send['status'] == 200) {
+			// Response XML
+			$responseXml = new SimpleXMLElement($valueXml);
+			
+			// <result>0</result>
+			// <msg> BERHASIL: Isi pulsa berhasil. No trx: 10001 (Rp 19750). Saldo: Rp xxx. No HP: 0812345678.</msg>
+			// <trxid>10001</trxid>
+			// <partner_trxid>12345</partner_trxid>
+			// <amount>92072</amount> jumlah tagihan yang dibayar 
+			$rs_result = $responseXml['result'];
+			$rs_msg = $responseXml['msg'];
+			$rs_trxid = $responseXml['trxid'];
+			$dr_sn = '';
+			$send_type = 'ori';
+
+			$amount = $responseXml['amount'];
+			// INSERT
+			$trxSave = $this->Cyrusku_Model->insertTrx('PAY',$productid,$amount,$msisdn,$trxid,$signature,$rs_result,$rs_msg,$rs_trxid,$dr_sn,$send_type);
+		}
 	}
 	public function Cek_Saldo()
 	{
@@ -177,12 +258,20 @@ class CyruskuAPI extends CI_Controller {
 
 		// Request
 		$send = $this->Request_Model->httpPostXML($url,$valueXml);
-		print_r($send);
-		// Response XML
-		// $responseXml = new SimpleXMLElement($valueXml);
+		// Array ( [status] => 301 [output] => ) 
+		if($send['status'] == 200) {
+			// Response XML
+			$responseXml = new SimpleXMLElement($valueXml);
 		
-		// <result>0</result>
-		// <msg>Saldo Rp. 251680</msg>
-		// <saldo>10001</trxid>
+			// <result>0</result>
+			// <msg>Saldo Rp. 251680</msg>
+			// <saldo>10001</trxid>
+
+			$data = array(
+				'saldo' => $responseXml['saldo']
+			);
+
+			echo json_encode($data);
+		}
 	}
 }

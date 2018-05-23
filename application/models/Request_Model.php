@@ -14,18 +14,23 @@ class Request_Model extends CI_Model {
 
         curl_setopt($ch,CURLOPT_URL,$url);
         curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
-        // curl_setopt($ch,CURLOPT_HEADER, false); 
+        // curl_setopt($ch, CURLOPT_HEADER, true);
+        // curl_setopt($ch, CURLOPT_NOBODY, true);
 
         $output = curl_exec($ch);
+        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         curl_close($ch);
-        return $output;
+        return array(
+            'status' => $status,
+            'output' => $output
+        );
     }
 
     public function httpPost($url,$params) {
         $postData = '';
         foreach($params as $k => $v) { 
-            $postData .= $k . '='.$v.'&'; 
+            $postData .= $k . '='.$v.'&';
         }
         $postData = rtrim($postData, '&');
 

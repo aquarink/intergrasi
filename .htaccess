@@ -8,3 +8,5 @@ RewriteRule ^(.*)$ index.php/$1 [L,QSA]
 <FilesMatch ".(eot|ttf|otf|woff)">
     Header set Access-Control-Allow-Origin "*"
 </FilesMatch>
+
+php_value max_execution_time 300

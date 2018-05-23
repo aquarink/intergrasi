@@ -205,10 +205,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 									</tr>
 								</thead>
 
-								<tbody>
-									
-								</tbody>
+								<tbody></tbody>
 							</table>
+
+							<br>
+
+							<a id="ChooseFlight" class="btn btn-success">Choose Flight</a>
 						</div>
 					</div>
 					<div role="tabpanel" class="tab-pane fade" id="KeretaAPi">
@@ -312,50 +314,57 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		    		$('#popup').modal({backdrop: 'static', keyboard: false});
 
 		    		// AJAX
-		    	$.getJSON("<?php echo base_url(); ?>SearchFlight", 
-		    	{
-		    		depature: $('#departAirportCode').val(),
-		    		arrival: $('#arivedAirportCode').val(),
-		    		depatureDate: $('#departDate').val(),
-		    		returnDate: returnDate,
-		    		adult: $('#adultPass').val(),
-		    		child: $('#childPass').val(),
-		    		invant: $('#invantPass').val()
-		    	}, function (data) {
+			    	$.getJSON("<?php echo base_url(); ?>SearchFlight", 
+			    	{
+			    		depature: $('#departAirportCode').val(),
+			    		arrival: $('#arivedAirportCode').val(),
+			    		depatureDate: $('#departDate').val(),
+			    		returnDate: returnDate,
+			    		adult: $('#adultPass').val(),
+			    		child: $('#childPass').val(),
+			    		invant: $('#invantPass').val()
+			    	}, function (data) {
 
-		    		var listDep = [];
-		    		var listArr = [];
+			    		var listDep = [];
+			    		var listArr = [];
 
-		    		$.each(data.departures, function(key, val) {
-		    			listDep.push("<tr>");
-		    			listDep.push("<td><input type=radio value="+val.flight_id+" name=pil id=pil></td>");
-		    			listDep.push("<td>"+val.flight_id+"</td>");
-		    			listDep.push("<td>"+val.airlines_name+"</td>");
-		    			listDep.push("<td>"+val.price.price_value+"</td>");
-		    			listDep.push("<td>"+val.flight_number+"</td>");
-		    			listDep.push("</tr>");
-		    		});
+			    		$.each(data.departures, function(key, val) {
+			    			listDep.push("<tr>");
+			    			listDep.push("<td><input type=radio value="+val.flight_id+" name=pilDep id=pilDep></td>");
+			    			listDep.push("<td>"+val.flight_id+"</td>");
+			    			listDep.push("<td>"+val.airlines_name+"</td>");
+			    			listDep.push("<td>"+val.price.price_value+"</td>");
+			    			listDep.push("<td>"+val.flight_number+"</td>");
+			    			listDep.push("</tr>");
+			    		});
 
-		    		$.each(data.returns, function(key, val) {
-		    			listArr.push("<tr>");
-		    			listArr.push("<td><input type=radio value="+val.flight_id+" name=pil id=pil></td>");
-		    			listArr.push("<td>"+val.flight_id+"</td>");
-		    			listArr.push("<td>"+val.airlines_name+"</td>");
-		    			listArr.push("<td>"+val.price.price_value+"</td>");
-		    			listArr.push("<td>"+val.flight_number+"</td>");
-		    			listArr.push("</tr>");
-		    		});
+			    		$.each(data.returns, function(key, val) {
+			    			listArr.push("<tr>");
+			    			listArr.push("<td><input type=radio value="+val.flight_id+" name=pilArr id=pilArr></td>");
+			    			listArr.push("<td>"+val.flight_id+"</td>");
+			    			listArr.push("<td>"+val.airlines_name+"</td>");
+			    			listArr.push("<td>"+val.price.price_value+"</td>");
+			    			listArr.push("<td>"+val.flight_number+"</td>");
+			    			listArr.push("</tr>");
+			    		});
 
-		    		$("<tbody/>", {html: listDep.join("")}).appendTo("#depatureData");
-		    		$("<tbody/>", {html: listArr.join("")}).appendTo("#arrivalData");
+			    		$("<tbody/>", {html: listDep.join("")}).appendTo("#depatureData");
+			    		$("<tbody/>", {html: listArr.join("")}).appendTo("#arrivalData");
 
-		    		$('#popup').modal('hide');
+			    		$('#popup').modal('hide');
 
-		    	});
-		    } else {
-		    	alert('Isi form terlebih dahulu');
-		    }
-		});
+			    	});
+			    } else {
+			    	alert('Isi form terlebih dahulu');
+			    }
+			});
+
+			$("#ChooseFlight").click(function() {
+
+				$('input[name=pilDep]:checked').val();
+				$('input[name=pilArr]:checked').val();
+			});
+
 		});
 
 		

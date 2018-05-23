@@ -20,6 +20,26 @@ class Flight_Model extends CI_Model {
         return $this->db->affected_rows();
     }
 
+    public function insertFlightUpdate($update_token,$depature_code,$arrival_code,$update_date,$adult,$child,$infant,$timestmp,$filename)
+    {
+        $update_datetime = date('Y-m-d H:i:s');
+
+        $sql = "INSERT INTO tiket_api_flight_update(update_token,depature_code,arrival_code,update_date,adult,child,infant,timestmp,filename,update_datetime) "
+                . "VALUES("
+                . "" . $this->db->escape($update_token) . ", "
+                . "" . $this->db->escape($depature_code) . ", "
+                . "" . $this->db->escape($arrival_code) . ", "
+                . "" . $this->db->escape($update_date) . ", "
+                . "" . $this->db->escape($adult) . ", "
+                . "" . $this->db->escape($child) . ", "
+                . "" . $this->db->escape($infant) . ", "
+                . "" . $this->db->escape($timestmp) . ", "
+                . "" . $this->db->escape($filename) . ", "
+                . "" . $this->db->escape($update_datetime) . ")";
+        $this->db->query($sql);
+        return $this->db->affected_rows();
+    }
+
     public function updateAirport($airport_code,$airport_name,$country_id,$country_name,$update_datetime) {
         $sql = "UPDATE tiket_api_flight_airports SET "
                 . "airport_name = " . $this->db->escape($airport_name) . ", "
