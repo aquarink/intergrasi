@@ -1,0 +1,1 @@
+{"diagnostic":{"error_msgs":"you need secretkey or token","status":"403","instruction":["you must have token to use our API","to get token you must request to this url 'api.tiket.com\/apiv1\/payexpress?method=getToken&secretkey=....' and add your secretkey","secretkey = apikey from company","token must be use every time you access API"]},"output_type":"json"}

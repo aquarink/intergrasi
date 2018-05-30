@@ -44,7 +44,7 @@ class Train_Model extends CI_Model {
 
     public function searchStationLike($search)
     {
-    	$sql = "SELECT * FROM tiket_api_train_station WHERE station_code LIKE '%".$search."%' OR station_name LIKE '%".$search."%' OR station_city LIKE '%".$search."%' ORDER BY station_name ASC LIMIT 1";
+    	$sql = "SELECT * FROM tiket_api_train_station WHERE station_code LIKE '%".$search."%' OR station_name LIKE '%".$search."%' OR station_city LIKE '%".$search."%' ORDER BY station_name ASC";
         $query = $this->db->query($sql);
         return $query->result();
     }

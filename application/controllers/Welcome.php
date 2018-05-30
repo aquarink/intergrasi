@@ -25,7 +25,31 @@ class Welcome extends CI_Controller {
 
 		}
 
-		$this->load->view('welcome_message');
+		$this->load->view('pesawat');
+	}
+	public function pesawat()
+	{
+		if($this->input->post()) {
+
+		}
+
+		$this->load->view('pesawat');
+	}
+	public function keretaapi()
+	{
+		if($this->input->post()) {
+
+		}
+
+		$this->load->view('keretaapi');
+	}
+	public function hotel()
+	{
+		if($this->input->post()) {
+
+		}
+
+		$this->load->view('hotel');
 	}
 
 	public function Login()

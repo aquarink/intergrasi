@@ -118,10 +118,12 @@ class FlightAPI extends CI_Controller {
 							if($getFlightNewArr['status'] == 200) {
 								if (write_file($flightFile.$flightArrFilename, $getFlightNewArr['output'])) {
 									$flightsJsonArr = $flightFileUrl.$flightArrFilename;
+									echo "a";
 								}
 							}
 						} else {
 							$flightsJsonArr = $flightFileUrl.$flightArrFilename;
+							echo "b";
 						}
 					}
 				}  else  {
@@ -130,101 +132,104 @@ class FlightAPI extends CI_Controller {
 					if($getFlightNewArr['status'] == 200) {
 						if (write_file($flightFile.$flightArrFilename, $getFlightNewArr['output'])) {
 							$flightsJsonArr = $flightFileUrl.$flightArrFilename;
+							echo "c";
 						}
 					}
 				}
 
-				$jsonDataRet = $this->Request_Model->httpGet($flightsJsonArr);
-				if($jsonDataRet['status'] == 200) {
+				// $jsonDataRet = $this->Request_Model->httpGet($flightsJsonArr);
+				// if($jsonDataRet['status'] == 200) {
 
-					$flightsRet = json_decode($jsonDataRet['output'], true);
+				// 	$flightsRet = json_decode($jsonDataRet['output'], true);
 
-					// RETURN OUTPUT
-					foreach ($flightsRet['returns']['result'] as $key => $value) {
-						foreach ($value['flight_infos']['flight_info'] as $k => $v) {
-							// FIRST
-							$findResult['returns'][$v['flight_number']]['flight_id'] = $value['flight_id'];
-							$findResult['returns'][$v['flight_number']]['stop'] = $value['stop'];
-							$findResult['returns'][$v['flight_number']]['airlines_name'] = $value['airlines_name'];
-							// PRICE
-							$findResult['returns'][$v['flight_number']]['price']['price_value'] = $value['price_value'];
-							$findResult['returns'][$v['flight_number']]['price']['price_adult'] = $value['price_adult'];
-							$findResult['returns'][$v['flight_number']]['price']['price_child'] = $value['price_child'];
-							$findResult['returns'][$v['flight_number']]['price']['price_infant'] = $value['price_infant'];
+				// 	// RETURN OUTPUT
+				// 	foreach ($flightsRet['returns']['result'] as $key => $value) {
+				// 		foreach ($value['flight_infos']['flight_info'] as $k => $v) {
+				// 			// FIRST
+				// 			$findResult['returns'][$v['flight_number']]['flight_id'] = $value['flight_id'];
+				// 			$findResult['returns'][$v['flight_number']]['stop'] = $value['stop'];
+				// 			$findResult['returns'][$v['flight_number']]['airlines_name'] = $value['airlines_name'];
+				// 			// PRICE
+				// 			$findResult['returns'][$v['flight_number']]['price']['price_value'] = $value['price_value'];
+				// 			$findResult['returns'][$v['flight_number']]['price']['price_adult'] = $value['price_adult'];
+				// 			$findResult['returns'][$v['flight_number']]['price']['price_child'] = $value['price_child'];
+				// 			$findResult['returns'][$v['flight_number']]['price']['price_infant'] = $value['price_infant'];
 
-							// SECOND
-							// FROM
-							$findResult['returns'][$v['flight_number']]['flight_number'] = $v['flight_number'];
-							$findResult['returns'][$v['flight_number']]['departure_city'] = $v['departure_city'];
-							$findResult['returns'][$v['flight_number']]['departure_city_name'] = $v['departure_city_name'];
-							$findResult['returns'][$v['flight_number']]['departure_airport_name'] = $v['departure_airport_name'];
-							$findResult['returns'][$v['flight_number']]['departure_airport_terminal'] = $v['terminal'];
-							$findResult['returns'][$v['flight_number']]['departure_date_time'] = $v['departure_date_time'];
-							// TO
-							$findResult['returns'][$v['flight_number']]['arrival_city'] = $v['arrival_city'];
-							$findResult['returns'][$v['flight_number']]['departure_city_name'] = $v['arrival_city_name'];
-							$findResult['returns'][$v['flight_number']]['arrival_airport_name'] = $v['arrival_airport_name'];
-							$findResult['returns'][$v['flight_number']]['arrival_date_time'] = $v['arrival_date_time'];
-							// Thumbnail
-							$findResult['returns'][$v['flight_number']]['img_src'] = $v['img_src'];
-							// DURATION
-							$findResult['returns'][$v['flight_number']]['duration_second'] = $v['duration_time'];
-							$findResult['returns'][$v['flight_number']]['duration_minute'] = $v['duration_minute'];
-							$findResult['returns'][$v['flight_number']]['duration_hour'] = $v['duration_hour'];
-							// BAGASI
-							$findResult['returns'][$v['flight_number']]['check_in_baggage'] = $v['check_in_baggage'];
-							$findResult['returns'][$v['flight_number']]['check_in_baggage_unit'] = $v['check_in_baggage_unit'];
-						}
-					}
-				}
+				// 			// SECOND
+				// 			// FROM
+				// 			$findResult['returns'][$v['flight_number']]['flight_number'] = $v['flight_number'];
+				// 			$findResult['returns'][$v['flight_number']]['departure_city'] = $v['departure_city'];
+				// 			$findResult['returns'][$v['flight_number']]['departure_city_name'] = $v['departure_city_name'];
+				// 			$findResult['returns'][$v['flight_number']]['departure_airport_name'] = $v['departure_airport_name'];
+				// 			$findResult['returns'][$v['flight_number']]['departure_airport_terminal'] = $v['terminal'];
+				// 			$findResult['returns'][$v['flight_number']]['departure_date_time'] = $v['departure_date_time'];
+				// 			// TO
+				// 			$findResult['returns'][$v['flight_number']]['arrival_city'] = $v['arrival_city'];
+				// 			$findResult['returns'][$v['flight_number']]['departure_city_name'] = $v['arrival_city_name'];
+				// 			$findResult['returns'][$v['flight_number']]['arrival_airport_name'] = $v['arrival_airport_name'];
+				// 			$findResult['returns'][$v['flight_number']]['arrival_date_time'] = $v['arrival_date_time'];
+				// 			// Thumbnail
+				// 			$findResult['returns'][$v['flight_number']]['img_src'] = $v['img_src'];
+				// 			// DURATION
+				// 			$findResult['returns'][$v['flight_number']]['duration_second'] = $v['duration_time'];
+				// 			$findResult['returns'][$v['flight_number']]['duration_minute'] = $v['duration_minute'];
+				// 			$findResult['returns'][$v['flight_number']]['duration_hour'] = $v['duration_hour'];
+				// 			// BAGASI
+				// 			$findResult['returns'][$v['flight_number']]['check_in_baggage'] = $v['check_in_baggage'];
+				// 			$findResult['returns'][$v['flight_number']]['check_in_baggage_unit'] = $v['check_in_baggage_unit'];
+				// 		}
+				// 	}
+				// }
 
+			} else {
+				echo "string";
 			}
 
-			$jsonDataDep = $this->Request_Model->httpGet($flightsJson);
-			if($jsonDataDep['status'] == 200) {
+			// $jsonDataDep = $this->Request_Model->httpGet($flightsJson);
+			// if($jsonDataDep['status'] == 200) {
 
-				$flightsDep = json_decode($jsonDataDep['output'], true);
+			// 	$flightsDep = json_decode($jsonDataDep['output'], true);
 
-				foreach ($flightsDep['departures']['result'] as $key => $value) {
-					foreach ($value['flight_infos']['flight_info'] as $k => $v) {
-						// FIRST
-						$findResult['departures'][$v['flight_number']]['flight_id'] = $value['flight_id'];
-						$findResult['departures'][$v['flight_number']]['stop'] = $value['stop'];
-						$findResult['departures'][$v['flight_number']]['airlines_name'] = $value['airlines_name'];
-						// PRICE
-						$findResult['departures'][$v['flight_number']]['price']['price_value'] = $value['price_value'];
-						$findResult['departures'][$v['flight_number']]['price']['price_adult'] = $value['price_adult'];
-						$findResult['departures'][$v['flight_number']]['price']['price_child'] = $value['price_child'];
-						$findResult['departures'][$v['flight_number']]['price']['price_infant'] = $value['price_infant'];
+			// 	foreach ($flightsDep['departures']['result'] as $key => $value) {
+			// 		foreach ($value['flight_infos']['flight_info'] as $k => $v) {
+			// 			// FIRST
+			// 			$findResult['departures'][$v['flight_number']]['flight_id'] = $value['flight_id'];
+			// 			$findResult['departures'][$v['flight_number']]['stop'] = $value['stop'];
+			// 			$findResult['departures'][$v['flight_number']]['airlines_name'] = $value['airlines_name'];
+			// 			// PRICE
+			// 			$findResult['departures'][$v['flight_number']]['price']['price_value'] = $value['price_value'];
+			// 			$findResult['departures'][$v['flight_number']]['price']['price_adult'] = $value['price_adult'];
+			// 			$findResult['departures'][$v['flight_number']]['price']['price_child'] = $value['price_child'];
+			// 			$findResult['departures'][$v['flight_number']]['price']['price_infant'] = $value['price_infant'];
 
-						// SECOND
-						// FROM
-						$findResult['departures'][$v['flight_number']]['flight_number'] = $v['flight_number'];
-						$findResult['departures'][$v['flight_number']]['departure_city'] = $v['departure_city'];
-						$findResult['departures'][$v['flight_number']]['departure_city_name'] = $v['departure_city_name'];
-						$findResult['departures'][$v['flight_number']]['departure_airport_name'] = $v['departure_airport_name'];
-						$findResult['departures'][$v['flight_number']]['departure_airport_terminal'] = $v['terminal'];
-						$findResult['departures'][$v['flight_number']]['departure_date_time'] = $v['departure_date_time'];
-						// TO
-						$findResult['departures'][$v['flight_number']]['arrival_city'] = $v['arrival_city'];
-						$findResult['departures'][$v['flight_number']]['departure_city_name'] = $v['arrival_city_name'];
-						$findResult['departures'][$v['flight_number']]['arrival_airport_name'] = $v['arrival_airport_name'];
-						$findResult['departures'][$v['flight_number']]['arrival_date_time'] = $v['arrival_date_time'];
-						// Thumbnail
-						$findResult['departures'][$v['flight_number']]['img_src'] = $v['img_src'];
-						// DURATION
-						$findResult['departures'][$v['flight_number']]['duration_second'] = $v['duration_time'];
-						$findResult['departures'][$v['flight_number']]['duration_minute'] = $v['duration_minute'];
-						$findResult['departures'][$v['flight_number']]['duration_hour'] = $v['duration_hour'];
-						// BAGASI
-						$findResult['departures'][$v['flight_number']]['check_in_baggage'] = $v['check_in_baggage'];
-						$findResult['departures'][$v['flight_number']]['check_in_baggage_unit'] = $v['check_in_baggage_unit'];
-					}
-				}
+			// 			// SECOND
+			// 			// FROM
+			// 			$findResult['departures'][$v['flight_number']]['flight_number'] = $v['flight_number'];
+			// 			$findResult['departures'][$v['flight_number']]['departure_city'] = $v['departure_city'];
+			// 			$findResult['departures'][$v['flight_number']]['departure_city_name'] = $v['departure_city_name'];
+			// 			$findResult['departures'][$v['flight_number']]['departure_airport_name'] = $v['departure_airport_name'];
+			// 			$findResult['departures'][$v['flight_number']]['departure_airport_terminal'] = $v['terminal'];
+			// 			$findResult['departures'][$v['flight_number']]['departure_date_time'] = $v['departure_date_time'];
+			// 			// TO
+			// 			$findResult['departures'][$v['flight_number']]['arrival_city'] = $v['arrival_city'];
+			// 			$findResult['departures'][$v['flight_number']]['departure_city_name'] = $v['arrival_city_name'];
+			// 			$findResult['departures'][$v['flight_number']]['arrival_airport_name'] = $v['arrival_airport_name'];
+			// 			$findResult['departures'][$v['flight_number']]['arrival_date_time'] = $v['arrival_date_time'];
+			// 			// Thumbnail
+			// 			$findResult['departures'][$v['flight_number']]['img_src'] = $v['img_src'];
+			// 			// DURATION
+			// 			$findResult['departures'][$v['flight_number']]['duration_second'] = $v['duration_time'];
+			// 			$findResult['departures'][$v['flight_number']]['duration_minute'] = $v['duration_minute'];
+			// 			$findResult['departures'][$v['flight_number']]['duration_hour'] = $v['duration_hour'];
+			// 			// BAGASI
+			// 			$findResult['departures'][$v['flight_number']]['check_in_baggage'] = $v['check_in_baggage'];
+			// 			$findResult['departures'][$v['flight_number']]['check_in_baggage_unit'] = $v['check_in_baggage_unit'];
+			// 		}
+			// 	}
 
-			}
+			// }
 
-			echo json_encode($findResult);
+			// echo json_encode($findResult);
 		}
 	}
 

@@ -10,78 +10,100 @@ class Request_Model extends CI_Model {
     }
 
     public function httpGet($url) {
-        $ch = curl_init();  
 
-        curl_setopt($ch,CURLOPT_URL,$url);
-        curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
-        // curl_setopt($ch, CURLOPT_HEADER, true);
-        // curl_setopt($ch, CURLOPT_NOBODY, true);
+        $curl = curl_init();
 
-        $output = curl_exec($ch);
-        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => array(
+                "Cache-Control: no-cache",
+                "Postman-Token: ff2d102d-cca3-4e90-a78c-9e9afed0009a"
+            ),
+        ));
 
-        curl_close($ch);
+        $output = curl_exec($curl);
+        $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+        curl_close($curl);
+
         return array(
             'status' => $status,
             'output' => $output
         );
+  }
+
+  public function httpPost($url,$params) {
+    $postData = '';
+    foreach($params as $k => $v) { 
+        $postData .= $k . '='.$v.'&';
+    }
+    $postData = rtrim($postData, '&');
+
+    $ch = curl_init();  
+
+    curl_setopt($ch,CURLOPT_URL,$url);
+    curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+    curl_setopt($ch,CURLOPT_HEADER, false); 
+    curl_setopt($ch, CURLOPT_POST, count($postData));
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);    
+
+    $output = curl_exec($ch);
+
+    curl_close($ch);
+    return $output;
+}
+
+public function httpPostXML($url,$xml) {
+
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "POST",
+        CURLOPT_POSTFIELDS => $xml,
+        CURLOPT_HTTPHEADER => array(
+            "Cache-Control: no-cache",
+            "Content-Type: text/xml",
+            "Postman-Token: 3438edde-5338-4b94-85be-7967cf3b06f3"
+        ),
+    ));
+
+    $output = curl_exec($curl);
+    $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+    curl_close($curl);
+
+    return array(
+        'status' => $status,
+        'output' => $output
+    );
+}
+
+public function arrayToXml($array, $rootElement = null, $xml = null) {
+    $_xml = $xml;
+
+    if ($_xml === null) {
+        $_xml = new SimpleXMLElement($rootElement !== null ? $rootElement : '<root/>');
     }
 
-    public function httpPost($url,$params) {
-        $postData = '';
-        foreach($params as $k => $v) { 
-            $postData .= $k . '='.$v.'&';
-        }
-        $postData = rtrim($postData, '&');
-
-        $ch = curl_init();  
-
-        curl_setopt($ch,CURLOPT_URL,$url);
-        curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
-        curl_setopt($ch,CURLOPT_HEADER, false); 
-        curl_setopt($ch, CURLOPT_POST, count($postData));
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);    
-
-        $output = curl_exec($ch);
-
-        curl_close($ch);
-        return $output;
-    }
-
-    public function httpPostXML($url,$xml) {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt ($ch, CURLOPT_HTTPHEADER, Array("Content-Type: text/xml"));
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
-        curl_setopt($ch, CURLOPT_NOBODY  , true);  // we don't need body
-
-        $output = curl_exec($ch);
-        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        
-        curl_close($ch);
-        return array(
-            'status' => $status,
-            'output' => $output
-        );
-    }
-
-    public function arrayToXml($array, $rootElement = null, $xml = null) {
-        $_xml = $xml;
-     
-        if ($_xml === null) {
-            $_xml = new SimpleXMLElement($rootElement !== null ? $rootElement : '<root/>');
-        }
-     
-        foreach ($array as $k => $v) {
+    foreach ($array as $k => $v) {
             if (is_array($v)) { //nested array
                 arrayToXml($v, $k, $_xml->addChild($k));
             } else {
                 $_xml->addChild($k, $v);
             }
         }
-     
+
         return $_xml->asXML();
     }
 

@@ -58,7 +58,8 @@ $config['rpx_api_key'] = '';
 | Cyrusku API TOKEN
 |--------------------------------------------------------------------------
 */
-$config['cyrusku_api_url'] = 'https://cyrusku.cyruspad.com/interkoneksi/productcyrusku.asp';
+// $config['cyrusku_api_url'] = 'https://cyrusku.cyruspad.com/interkoneksi/productcyrusku.asp';
+$config['cyrusku_api_url'] = 'https://cyrusku.cyruspad.com/interkoneksi/interkoneksicyrusku.asp';
 $config['cyrusku_api_username'] = '6282298407898';
 $config['cyrusku_api_password'] = '496654';
 

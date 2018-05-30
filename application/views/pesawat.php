@@ -9,7 +9,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-	<title>Abu Nawas</title>
+	<title>Abu Nawas - Pesawat</title>
 
 	<!-- Bootstrap -->
 	<link href="assets/css/bootstrap.min.css" rel="stylesheet">
@@ -22,7 +22,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
 
-  <style>                                                                         
+  <style>                                                                          
   .box{
   	width: 500px;
   	margin: auto;
@@ -67,14 +67,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 				<!-- Nav tabs -->
 				<ul class="nav nav-tabs" role="tablist">
-					<li role="presentation" class="active"><a href="#Pesawat" aria-controls="Pesawat" role="tab" data-toggle="tab">Pesawat</a></li>
-					<li role="presentation"><a href="#KeretaAPi" aria-controls="KeretaAPi" role="tab" data-toggle="tab">Kereta APi</a></li>
-					<li role="presentation"><a href="#Hotel" aria-controls="Hotel" role="tab" data-toggle="tab">Hotel</a></li>
+					<li class="active"><a href="<?php echo base_url() ?>pesawat">Pesawat</a></li>
+					<li><a href="<?php echo base_url() ?>keretaapi">Kereta APi</a></li>
+					<li><a href="<?php echo base_url() ?>hotel">Hotel</a></li>
 				</ul>
 
 				<!-- Tab panes -->
 				<div class="tab-content">
-					<div role="tabpanel" class="tab-pane fade active in" id="Pesawat">
+					<div role="tabpanel" class="tab-pane fade active in">
 						<h4>Cari Penerbangan</h4>
 						
 						<div class="col-md-6">
@@ -328,25 +328,32 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			    		var listDep = [];
 			    		var listArr = [];
 
-			    		$.each(data.departures, function(key, val) {
-			    			listDep.push("<tr>");
-			    			listDep.push("<td><input type=radio value="+val.flight_id+" name=pilDep id=pilDep></td>");
-			    			listDep.push("<td>"+val.flight_id+"</td>");
-			    			listDep.push("<td>"+val.airlines_name+"</td>");
-			    			listDep.push("<td>"+val.price.price_value+"</td>");
-			    			listDep.push("<td>"+val.flight_number+"</td>");
-			    			listDep.push("</tr>");
-			    		});
+			    		if(data.error === 0) {
+			    			$.each(data.datas.departures, function(key, val) {
+				    			listDep.push("<tr>");
+				    			listDep.push("<td><input type=radio value="+val.flight_id+" name=pilDep id=pilDep></td>");
+				    			listDep.push("<td>"+val.flight_id+"</td>");
+				    			listDep.push("<td>"+val.airlines_name+"</td>");
+				    			listDep.push("<td>"+val.price.price_value+"</td>");
+				    			listDep.push("<td>"+val.flight_number+"</td>");
+				    			listDep.push("</tr>");
+				    		});
 
-			    		$.each(data.returns, function(key, val) {
-			    			listArr.push("<tr>");
-			    			listArr.push("<td><input type=radio value="+val.flight_id+" name=pilArr id=pilArr></td>");
-			    			listArr.push("<td>"+val.flight_id+"</td>");
-			    			listArr.push("<td>"+val.airlines_name+"</td>");
-			    			listArr.push("<td>"+val.price.price_value+"</td>");
-			    			listArr.push("<td>"+val.flight_number+"</td>");
-			    			listArr.push("</tr>");
-			    		});
+				    		$.each(data.datas.returns, function(key, val) {
+				    			listArr.push("<tr>");
+				    			listArr.push("<td><input type=radio value="+val.flight_id+" name=pilArr id=pilArr></td>");
+				    			listArr.push("<td>"+val.flight_id+"</td>");
+				    			listArr.push("<td>"+val.airlines_name+"</td>");
+				    			listArr.push("<td>"+val.price.price_value+"</td>");
+				    			listArr.push("<td>"+val.flight_number+"</td>");
+				    			listArr.push("</tr>");
+				    		});
+			    		} else {
+			    			alert('Data Tidak Ditemukan');
+			    			window.location.reload(true);
+			    		}
+
+			    		
 
 			    		$("<tbody/>", {html: listDep.join("")}).appendTo("#depatureData");
 			    		$("<tbody/>", {html: listArr.join("")}).appendTo("#arrivalData");
@@ -361,8 +368,62 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 			$("#ChooseFlight").click(function() {
 
+				var retType = $('#returnFlight').val();
+				if(retType === 1 || retType === '1') {
+		    		// return
+		    		var returnDate = $('#arivedDate').val();
+		    	} else {
+		    		// one way
+		    		var returnDate = '';
+		    	}
+
 				$('input[name=pilDep]:checked').val();
 				$('input[name=pilArr]:checked').val();
+
+				$('#popup').modal({backdrop: 'static', keyboard: false});
+
+				// AJAX
+		    	$.getJSON("<?php echo base_url(); ?>GetFlightData", 
+		    	{
+		    		goflightid: $('#departAirportCode').val(),
+		    		goflightdate: $('#departDate').val(),
+		    		retflightid: $('#departAirportCode').val(),
+		    		retflightdate: returnDate
+		    	}, function (data) {
+
+		    		console.log(data);
+
+		    		// var listDep = [];
+		    		// var listArr = [];
+
+		    		// if(data.error === 0) {
+		    		// 	$.each(data.datas.departures, function(key, val) {
+			    	// 		listDep.push("<tr>");
+			    	// 		listDep.push("<td><input type=radio value="+val.flight_id+" name=pilDep id=pilDep></td>");
+			    	// 		listDep.push("<td>"+val.flight_id+"</td>");
+			    	// 		listDep.push("<td>"+val.airlines_name+"</td>");
+			    	// 		listDep.push("<td>"+val.price.price_value+"</td>");
+			    	// 		listDep.push("<td>"+val.flight_number+"</td>");
+			    	// 		listDep.push("</tr>");
+			    	// 	});
+
+			    	// 	$.each(data.datas.returns, function(key, val) {
+			    	// 		listArr.push("<tr>");
+			    	// 		listArr.push("<td><input type=radio value="+val.flight_id+" name=pilArr id=pilArr></td>");
+			    	// 		listArr.push("<td>"+val.flight_id+"</td>");
+			    	// 		listArr.push("<td>"+val.airlines_name+"</td>");
+			    	// 		listArr.push("<td>"+val.price.price_value+"</td>");
+			    	// 		listArr.push("<td>"+val.flight_number+"</td>");
+			    	// 		listArr.push("</tr>");
+			    	// 	});
+		    		// } else {
+		    		// 	alert('Data Tidak Ditemukan');
+		    		// 	window.location.reload(true);
+		    		// }
+
+		    		$('#popup').modal('hide');
+
+		    	});
 			});
 
 		});

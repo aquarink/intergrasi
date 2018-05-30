@@ -55,6 +55,10 @@ $route['logout'] = 'welcome/Logout';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
+$route['pesawat'] = 'welcome/pesawat';
+$route['keretaapi'] = 'welcome/keretaapi';
+$route['hotel'] = 'welcome/hotel';
+
 
 
 // Flight API
@@ -78,8 +82,6 @@ $route['FlightCheckoutPayment'] = 'FlightAPI/Flight_Checkout_Payment';
 // Hotel API
 $route['SearchHotel'] = 'HotelAPI/Search_Hotel';
 $route['InsertProvince'] = 'HotelAPI/Insert_Province';
-$route['SearchByArea'] = 'HotelAPI/Search_By_Area';
-$route['SearchByName'] = 'HotelAPI/Search_By_Name';
 $route['SearchAutocomplete'] = 'HotelAPI/Search_Autocomplete';
 $route['SearchHotelPromo'] = 'HotelAPI/Search_Hotel_Promo';
 $route['ViewDetailHotel'] = 'HotelAPI/View_Detail_Hotel';
@@ -112,5 +114,6 @@ $route['CyruskuSn'] = 'CyruskuAPI/Cyrusku_Sn';
 $route['CyruskuReversal'] = 'CyruskuAPI/Cyrusku_Reversal';
 $route['CyruskuCekTagihan'] = 'CyruskuAPI/Cyrusku_Cek_Tagihan';
 $route['CyruskuBayarTagihan'] = 'CyruskuAPI/Cyrusku_Bayar_Tagihan';
-$route['CyruskuBCekSaldo'] = 'CyruskuAPI/Cyrusku_Cek_Saldo';
+$route['CyruskuCekSaldo'] = 'CyruskuAPI/Cyrusku_Cek_Saldo';
+$route['CyruskuCekHarga'] = 'CyruskuAPI/Cyrusku_Cek_Harga';
 
