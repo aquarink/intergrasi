@@ -216,6 +216,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 								</tbody>
 							</table>
+
+							<br>
+
+							<h3>Checkout</h3>
+							<table id="hotelCheckout" class="table table-bordered table-hover table-striped">
+								<tbody>
+
+								</tbody>
+							</table>
 						</div>
 					</div>
 				</div>
@@ -360,7 +369,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 							listDep.push("<tr>");
 							listDep.push("<td colspan=3>"+v.total+"</td>");
-							listDep.push("<td colspan=10><input type='text' id='coUrl' value='"+v.checkoutUrl+"'></td>");
+							listDep.push("<td colspan=10><input type='hidden' id='coUrl' value='"+v.checkoutUrl+"'><a href=# id=pageRequestOrder>Order</a<</td>");
 							listDep.push("</tr>");
 						});
 
@@ -370,6 +379,44 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 					});
 				// }
+			});
+
+			$("#pageRequestOrder").click(function() {
+				$('#popup').modal({backdrop: 'static', keyboard: false});
+
+				var pageCheckout = $('#coUrl').val();
+
+				$.getJSON("<?php echo base_url(); ?>HotelCheckoutPageRequest",  { 
+					// hotel: hotelSelect
+					checkout: pageCheckout
+				}, function (data) {
+					// console.log(data);
+					// if(data.error === 211) {
+					// 	$('#popup').modal('hide');
+					// 	alert(data.msg);
+					// } else if(data.error === 200) {
+					// 	$('#popup').modal('hide');
+					// 	alert('Success');
+					// }
+
+					$.getJSON("<?php echo base_url(); ?>HotelCheckoutCustomer",  { 
+						salutation: "Mr",
+						firstName: "Jati".
+						lastName: "Gembrot",
+						emailAddress: "bibi@yahoocom",
+						phone: "%2B628888843",
+						conSalutation: "Mr",
+						conFirstName: "Jay",
+						conLastName: "Gem",
+						conEmailAddress: "bibi@yahoocom",
+						conPhone: "%2B628888843",
+						detailId: 31406,
+						country: "id"
+					}, function (data) {
+
+					$('#popup').modal('hide');
+
+				});
 			});
 
 		});

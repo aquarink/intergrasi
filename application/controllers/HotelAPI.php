@@ -482,7 +482,50 @@ class HotelAPI extends CI_Controller {
 	}
 	public function Hotel_Checkout_Page_Request()
 	{
-		
+		$url = $this->config->item('tiket_api_url_dev');
+		if(empty($this->session->userdata('hotel_token_session'))) {
+			$getToken = $url."apiv1/payexpress?method=getToken&secretkey=".$this->config->item('tiket_secret_key')."&output=json";
+			$getTokenResponse = $this->Request_Model->httpGet($getToken);
+			if($getTokenResponse['status'] == 200) {
+
+				$parsetoken = json_decode($getTokenResponse['output'], true);
+				$this->session->set_userdata('hotel_token_session', $parsetoken['token']);
+
+			}
+			
+		}
+
+		$validate_token = $this->Token_Model->validateToken($this->session->userdata('hotel_token_session'));
+
+		if($validate_token) {
+			// TRUE
+			$urlCheckout = $this->input->get('checkout');		
+			// $key = "&token=".$this->session->userdata('hotel_token_session');
+			$key = "&token=624cb009761ecadbd0042685a4a9d491f475b7df";
+			$format = "&output=json";
+
+			$request = $urlDelete.$key.$format;
+
+			$getResponse = $this->Request_Model->httpGet($request);
+			if($getResponse['status'] == 200) {
+				$checkoutCoustumer = json_decode($getResponse['output'], true);
+
+				if($checkoutCoustumer['diagnostic']['status'] == 200) {
+
+					$data = array(
+						'error' => 200
+					);
+
+					echo json_encode($data);
+				} else {
+					$data = array(
+						'error' => $checkoutCoustumer['diagnostic']['status']
+					);
+
+					echo json_encode($data);
+				}
+			}
+		}
 	}
 	public function Hotel_Checkout_Login()
 	{
@@ -491,7 +534,45 @@ class HotelAPI extends CI_Controller {
 
 	public function Hotel_Checkout_Customer()
 	{
-		
+		$url = $this->config->item('tiket_api_url_dev');
+		if(empty($this->session->userdata('hotel_token_session'))) {
+			$getToken = $url."apiv1/payexpress?method=getToken&secretkey=".$this->config->item('tiket_secret_key')."&output=json";
+			$getTokenResponse = $this->Request_Model->httpGet($getToken);
+			if($getTokenResponse['status'] == 200) {
+
+				$parsetoken = json_decode($getTokenResponse['output'], true);
+				$this->session->set_userdata('hotel_token_session', $parsetoken['token']);
+
+			}
+			
+		}
+
+		$validate_token = $this->Token_Model->validateToken($this->session->userdata('hotel_token_session'));
+
+		if($validate_token) {
+			// TRUE
+			$salutation = "?salutation=".$this->input->get('salutation');
+			$firstName = "&firstName=".$this->input->get('firstName');
+			$lastName = "&lastName=".$this->input->get('lastName');
+			$emailAddress = "&emailAddress=".$this->input->get('emailAddress');
+			$phone = "&phone=".$this->input->get('phone');
+			$conSalutation = "&conSalutation=".$this->input->get('conSalutation');
+			$conFirstName = "&conFirstName=".$this->input->get('conFirstName');
+			$conLastName = "&conLastName=".$this->input->get('conLastName');
+			$conEmailAddress = "&conEmailAddress=".$this->input->get('conEmailAddress');
+			$conPhone = "&conPhone=".$this->input->get('conPhone');
+			$detailId = "&detailId=".$this->input->get('detailId');
+			$country = "&country=".$this->input->get('country');
+			$key = "&token=".$this->session->userdata('hotel_token_session');
+			$format = "&output=json";
+
+			$request = $salutation.$firstName.$lastName.$emailAddress.$phone.$conSalutation.$conFirstName.$conLastName.$conEmailAddress.$conPhone.$detailId.$country.$key.$format;
+
+			$getResponse = $this->Request_Model->httpGet($request);
+			if($getResponse['status'] == 200) {
+				$getDelete = json_decode($getResponse['output'], true);
+			}
+		}
 	}
 	public function Hotel_Available()
 	{
