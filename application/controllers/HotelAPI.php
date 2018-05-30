@@ -245,14 +245,14 @@ class HotelAPI extends CI_Controller {
 					$theHotel[$v['id']]['room_id'] = $v['room_id'];
 					$theHotel[$v['id']]['room_name'] = $v['room_name'];
 
-					// PHOLICY
-					$cPholicy = count($v['list_promo_policy']);
-						$theHotel[$v['id']]['promo_policy']['promo_title_1'] = strip_tags($v['promo_title']);
-					for($i=0; $i < $cPholicy; $i++) {
-						$tier = array('tier_one','tier_two','tier_three','tier_four','tier_five');
-						$j = $i + 1;
-						$theHotel[$v['id']]['promo_policy']['promo_title_'.$j] = strip_tags($v['list_promo_policy'][$tier[$i]]);
-					}
+					// // PHOLICY
+					// $cPholicy = count($v['list_promo_policy']);
+					// 	$theHotel[$v['id']]['promo_policy']['promo_title_1'] = strip_tags($v['promo_title']);
+					// for($i=0; $i < $cPholicy; $i++) {
+					// 	$tier = array('tier_one','tier_two','tier_three','tier_four','tier_five');
+					// 	$j = $i + 1;
+					// 	$theHotel[$v['id']]['promo_policy']['promo_title_'.$j] = strip_tags($v['list_promo_policy'][$tier[$i]]);
+					// }
 
 					// BOOK
 					$theHotel[$v['id']]['bookUri'] = $v['bookUri'];
@@ -303,7 +303,6 @@ class HotelAPI extends CI_Controller {
 
 		if($validate_token) {
 			// TRUE
-
 			$hotelData = $this->input->get('hotel');
 			$hotelExpl = explode('_', $hotelData);
 
@@ -329,78 +328,102 @@ class HotelAPI extends CI_Controller {
 			if($getResponse['status'] == 200) {
 				$getDetail = json_decode($getResponse['output'], true);
 					
-				if($getDetail['diagnostic']['status'] == 200) {
+				if($getDetail['diagnostic']['status'] > 200) {
 					// SUCCESS
 					// Hotel_Order API
 					$paramOrder = "order";		
 					$keyOrder = "&token=".$this->session->userdata('hotel_token_session');
 					$formatOrder = "&output=json";
 
-					echo $requestOrder = $url.$paramOrder.$keyOrder.$formatOrder; exit();
+					// $requestOrder = $url.$paramOrder.$keyOrder.$formatOrder;
+					$requestOrder = "https://api-sandbox.tiket.com/order?token=624cb009761ecadbd0042685a4a9d491f475b7df&output=json";
+
 					$getResponseOrder = $this->Request_Model->httpGet($requestOrder);
 					if($getResponseOrder['status'] == 200) {
 						$getOrder = json_decode($getResponseOrder['output'], true);
-						foreach ($getOrder['myorder'] as $ky => $vl) {
 
-							$orderData[$vl['order_id']]['orderId'] = $vl['order_id'];
+						// LIST
+						$orderData[$getOrder['myorder']['order_id']]['orderId'] = $getOrder['myorder']['order_id'];
 
-							foreach ($vl['data'] as $kData => $vData) {
-								$orderData[$vl['order_id']]['expire'] = $vData['expire'];
-								$orderData[$vl['order_id']]['orderDetailId'] = $vData['order_detail_id'];
-								$orderData[$vl['order_id']]['orderExpireDatetime'] = $vData['order_expire_datetime'];
-								$orderData[$vl['order_id']]['orderType'] = $vData['order_type'];
-								$orderData[$vl['order_id']]['orderName'] = $vData['order_name'];
-								$orderData[$vl['order_id']]['orderNameDetail'] = $vData['order_name_detail'];
-								$orderData[$vl['order_id']]['orderDetailStatus'] = $vData['order_detail_status'];
-								$orderData[$vl['order_id']]['tenor'] = $vData['tenor'];
+						// ORDER DATA
+						foreach ($getOrder['myorder']['data'] as $kData => $vData) {
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['expire'] = $vData['expire'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['expire'] = $vData['expire'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['orderDetailId'] = $vData['order_detail_id'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['orderExpireDatetime'] = $vData['order_expire_datetime'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['orderType'] = $vData['order_type'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['orderName'] = $vData['order_name'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['orderNameDetail'] = $vData['order_name_detail'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['orderDetailStatus'] = $vData['order_detail_status'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['tenor'] = $vData['tenor'];
 
-								// DETAILS
-								foreach ($vData['detail'] as $kDetail => $vDetail) {
-									$orderData[$vl['order_id']]['orderDetailId'] = $vDetail['order_detail_id'];
-									$orderData[$vl['order_id']]['roomId'] = $vDetail['room_id'];
-									$orderData[$vl['order_id']]['rooms'] = $vDetail['rooms'];
-									$orderData[$vl['order_id']]['adult'] = $vDetail['adult'];
-									$orderData[$vl['order_id']]['child'] = $vDetail['child'];
-									$orderData[$vl['order_id']]['startdate'] = $vDetail['startdate'];
-									$orderData[$vl['order_id']]['enddate'] = $vDetail['enddate'];
-									$orderData[$vl['order_id']]['nights'] = $vDetail['nights'];
-									$orderData[$vl['order_id']]['totalCharge'] = $vDetail['total_charge'];
-									$orderData[$vl['order_id']]['startdateOriginal'] = $vDetail['startdate_original'];
-									$orderData[$vl['order_id']]['enddateOriginal'] = $vDetail['enddate_original'];
-									$orderData[$vl['order_id']]['price'] = $vDetail['price'];
-									$orderData[$vl['order_id']]['pricePerNight'] = $vDetail['price_per_night'];
-								}
+							// DETAIL
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['orderDetailId'] = $vData['detail']['order_detail_id'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['roomId'] = $vData['detail']['room_id'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['rooms'] = $vData['detail']['rooms'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['adult'] = $vData['detail']['adult'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['child'] = $vData['detail']['child'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['startdate'] = $vData['detail']['startdate'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['enddate'] = $vData['detail']['enddate'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['nights'] = $vData['detail']['nights'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['totalCharge'] = $vData['detail']['total_charge'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['startdateOriginal'] = $vData['detail']['startdate_original'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['enddateOriginal'] = $vData['detail']['enddate_original'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['price'] = $vData['detail']['price'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['pricePerNight'] = $vData['detail']['price_per_night'];
 
-								$orderData[$vl['order_id']]['orderPhoto'] = $vData['order_photo'];
-								$orderData[$vl['order_id']]['tax'] = $vData['tax'];
-								$orderData[$vl['order_id']]['itemCharge'] = $vData['item_charge'];
-								$orderData[$vl['order_id']]['subtotalCharge'] = $vData['subtotal_and_charge'];
+							// TAX
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['orderPhoto'] = $vData['order_photo'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['tax'] = $vData['tax'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['itemCharge'] = $vData['item_charge'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['subtotalCharge'] = $vData['subtotal_and_charge'];
 
-								// ORDERS MANAGE
-								$orderData[$vl['order_id']]['deleteOrder'] = $vData['delete_uri'];
-								$orderData[$vl['order_id']]['businessId'] = $vData['business_id'];
-							}
-
-							$orderData[$vl['order_id']]['total'] = $vl['total'];
-							$orderData[$vl['order_id']]['totalTax'] = $vl['total_tax'];
-							$orderData[$vl['order_id']]['totalWithoutTax'] = $vl['total_without_tax'];
-							$orderData[$vl['order_id']]['countInstallment'] = $vl['count_installment'];
-
-							$orderData[$vl['order_id']]['discount'] = $vl['discount'];
-							$orderData[$vl['order_id']]['discount_amount'] = $vl['discount_amount'];
+							// ORDERS MANAGE
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['deleteOrder'] = $vData['delete_uri'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['businessId'] = $vData['business_id'];
 						}
-					}
 
-					foreach ($getDetail['checkout'] as $kCo => $vCo) {
-						$orderData[$getDetail['diagnostic']['myorder']['order_id']]['checkout'] = $vCo['checkout'];
-					}
+						// TOTAL
+						$orderData[$getOrder['myorder']['order_id']]['total'] = $getOrder['myorder']['total'];
+						$orderData[$getOrder['myorder']['order_id']]['totalTax'] = $getOrder['myorder']['total_tax'];
+						$orderData[$getOrder['myorder']['order_id']]['totalWithoutTax'] = $getOrder['myorder']['total_without_tax'];
+						$orderData[$getOrder['myorder']['order_id']]['countInstallment'] = $getOrder['myorder']['count_installment'];
+						$orderData[$getOrder['myorder']['order_id']]['discount'] = $getOrder['myorder']['discount'];
+						$orderData[$getOrder['myorder']['order_id']]['discount_amount'] = $getOrder['myorder']['discount_amount'];
 
+						// CHECKOUT
+						$orderData[$getOrder['myorder']['order_id']]['checkoutUrl'] = $getOrder['checkout'];
+
+						$data = array(
+							'error' => $getDetail['diagnostic']['status'],
+							'msg' => 'Success get data',
+							'data' => $orderData
+						);
+
+						echo json_encode($data);
+					} else {
+						$data = array(
+							'error' => 500,
+							'msg' => 'Error 500',
+							'data' => 0
+						);
+
+						echo json_encode($data);
+					}
+				} elseif($getDetail['diagnostic']['status'] == 211) {
+					$data = array(
+						'error' => $getDetail['diagnostic']['status'],
+						'msg' => $getDetail['diagnostic']['error_msgs'],
+						'data' => 0
+					);
+
+					echo json_encode($data);
 				}
 				
 			}
 		}
 	}
-	public function Hotel_Order()
+	public function Hotel_Delete_Order()
 	{
 		$url = $this->config->item('tiket_api_url_dev');
 		if(empty($this->session->userdata('hotel_token_session'))) {
@@ -419,12 +442,44 @@ class HotelAPI extends CI_Controller {
 
 		if($validate_token) {
 			// TRUE
-			$param2 = "order";		
-			$key2 = "&token=".$this->session->userdata('hotel_token_session');
-			$format2 = "&output=json";
+			$urlDelete = $this->input->get('delete');		
+			// $key = "&token=".$this->session->userdata('hotel_token_session');
+			$key = "&token=624cb009761ecadbd0042685a4a9d491f475b7df";
+			$format = "&output=json";
+
+			$request = $urlDelete.$key.$format;
+
+			$getResponse = $this->Request_Model->httpGet($request);
+			if($getResponse['status'] == 200) {
+				$getDelete = json_decode($getResponse['output'], true);
+
+				if($getDelete['diagnostic']['status'] == 200) {
+
+					$data = array(
+						'error' => 200,
+						'msg' => $getDelete['updateStatus']
+					);
+
+					echo json_encode($data);
+				} else {
+					$data = array(
+						'error' => $getDelete['diagnostic']['status'],
+						'msg' => $getDelete['diagnostic']['error_msgs']
+					);
+
+					echo json_encode($data);
+				}
+			} else {
+				$data = array(
+					'error' => 500,
+					'msg' => 'Error 500',
+					'data' => 0
+				);
+
+				echo json_encode($data);
+			}
 		}
 	}
-
 	public function Hotel_Checkout_Page_Request()
 	{
 		

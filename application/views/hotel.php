@@ -190,6 +190,33 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							</div>
 
 						</form>
+
+						<div class="col-md-12">
+							<h3>Hotel Detail</h3>
+							<table id="hotelDetail" class="table table-bordered table-hover table-striped">
+								<thead>
+									<tr>
+										<th>Hapus Order</th>
+										<th>Order Detail Id</th>
+										<th>Hotel Name</th>
+										<th>Hotel Name Detail</th>
+										<th>Room ID</th>
+										<th>Room Amount</th>
+										<th>Adult</th>
+										<th>Child</th>
+										<th>Start Date</th>
+										<th>End Date</th>
+										<th>Night Amount</th>
+										<th>Price</th>
+										<th>Room Image</th>
+									</tr>
+								</thead>
+
+								<tbody>
+
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
 
@@ -228,8 +255,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					
 				},
 				source: function (request, response) {
-					$.getJSON("<?php echo base_url(); ?>SearchAutocomplete", { search: $('#SearchHotel').val() },
-					function (data) {
+					$.getJSON("<?php echo base_url(); ?>SearchAutocomplete", { search: $('#SearchHotel').val() },function (data) {
 						response($.map(data, function (value, key) {
 							return {
 								label: key.name,
@@ -244,19 +270,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			$("#SearchHotels").click(function() {
 
 				if($('#SearchHotelBusinessUri').val() !== '' && $('#checkinDate').val() !== '' && 
-		    		$('#night').val() !== '' && $('#room').val() !== '' && $('#adultPass').val() !== '0' || 
-		    		$('#childPass').val() !== '0' || $('#invantPass').val() !== '0') {
+					$('#night').val() !== '' && $('#room').val() !== '' && $('#adultPass').val() !== '0' || 
+					$('#childPass').val() !== '0' || $('#invantPass').val() !== '0') {
 
 					$('#popup').modal({backdrop: 'static', keyboard: false});				
 
-					$.getJSON($("#SearchHotelBusinessUri").val(), 
-					{ 
+					$.getJSON($("#SearchHotelBusinessUri").val(), { 
 						checkin: $('#checkinDate').val(),
 						night: $('#night').val(),
 						room: $('#room').val(),
 						adult: $('#adultPass').val(),
-			    		child: $('#childPass').val(),
-			    		invant: $('#invantPass').val()
+						child: $('#childPass').val(),
+						invant: $('#invantPass').val()
 					}, function (data) {
 						var listDep = [];
 						var listArr = [];
@@ -290,16 +315,58 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			});
 
 			$("#ChooseHotel").click(function() {
-				$('#popup').modal({backdrop: 'static', keyboard: false});
+				// if($('input[name=pilHotel]:checked').val() === '' || $('input[name=pilHotel]:checked').val() === undefined) {
+				// 	alert('Pilih Kamar');
+				// } else {
+					$('#popup').modal({backdrop: 'static', keyboard: false});
 
-				$.getJSON("<?php echo base_url(); ?>HotelAddOrder", 
-					{ 
-						hotel: $('input[name=pilHotel]:checked').val()
+					$.getJSON("<?php echo base_url(); ?>HotelAddOrder",  { 
+						// hotel: $('input[name=pilHotel]:checked').val()
+						hotel: "772101_2018-05-30_1_1_0_0_1"
 					}, function (data) {
+						// console.log(data);
+						// if(data.error === 211) {
+						// 	$('#popup').modal('hide');
+						// 	alert(data.msg);
+						// } else if(data.error === 200) {
+						// 	$('#popup').modal('hide');
+						// 	alert('Success');
+						// }
+
+						var listDep = [];
+						var listArr = [];
+
+						$.each(data.data, function(k, v) {
+							$.each(v.list, function(ky, vl) {
+								listDep.push("<tr>");
+								listDep.push("<td><a href='<?php echo base_url(); ?>HotelDeleteOrder?delete="+vl.deleteOrder+"'>Delete</a></td>");
+								listDep.push("<td>"+vl.orderDetailId+"</td>");
+								listDep.push("<td>"+vl.orderName+"</td>");
+								listDep.push("<td>"+vl.orderNameDetail+"</td>");
+								listDep.push("<td>"+vl.roomId+"</td>");
+								listDep.push("<td>"+vl.rooms+"</td>");
+								listDep.push("<td>"+vl.adult+"</td>");
+								listDep.push("<td>"+vl.child+"</td>");
+								listDep.push("<td>"+vl.startdate+"</td>");
+								listDep.push("<td>"+vl.enddate+"</td>");
+								listDep.push("<td>"+vl.nights+"</td>");
+								listDep.push("<td>"+vl.price+"</td>");
+								listDep.push("<td><img src='"+vl.orderPhoto+"' ></td>");
+								listDep.push("</tr>");
+							});
+
+							listDep.push("<tr>");
+							listDep.push("<td colspan=3>"+v.total+"</td>");
+							listDep.push("<td colspan=10><a href='"+v.checkoutUrl+"'>Check Out</a></td>");
+							listDep.push("</tr>");
+						});
+
+						$("<tbody/>", {html: listDep.join("")}).appendTo("#hotelDetail");
 
 						$('#popup').modal('hide');
 
 					});
+				// }
 			});
 
 		});

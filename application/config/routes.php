@@ -86,6 +86,7 @@ $route['SearchAutocomplete'] = 'HotelAPI/Search_Autocomplete';
 $route['SearchHotelPromo'] = 'HotelAPI/Search_Hotel_Promo';
 $route['ViewDetailHotel'] = 'HotelAPI/View_Detail_Hotel';
 $route['HotelAddOrder'] = 'HotelAPI/Hotel_Add_Order';
+$route['HotelDeleteOrder'] = 'HotelAPI/Hotel_Delete_Order';
 $route['HotelOrder'] = 'HotelAPI/Hotel_Order';
 $route['HotelCheckoutPageRequest'] = 'HotelAPI/Hotel_Checkout_Page_Request';
 $route['HotelCheckoutLogin'] = 'HotelAPI/Hotel_Checkout_Login';
