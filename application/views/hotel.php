@@ -320,8 +320,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				// } else {
 					$('#popup').modal({backdrop: 'static', keyboard: false});
 
+					var hotelSelect = $('input[name=pilHotel]:checked').val();
+
 					$.getJSON("<?php echo base_url(); ?>HotelAddOrder",  { 
-						// hotel: $('input[name=pilHotel]:checked').val()
+						// hotel: hotelSelect
 						hotel: "772101_2018-05-30_1_1_0_0_1"
 					}, function (data) {
 						// console.log(data);
@@ -339,7 +341,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						$.each(data.data, function(k, v) {
 							$.each(v.list, function(ky, vl) {
 								listDep.push("<tr>");
-								listDep.push("<td><a href='<?php echo base_url(); ?>HotelDeleteOrder?delete="+vl.deleteOrder+"'>Delete</a></td>");
+								// listDep.push("<td><a href='<?php echo base_url(); ?>HotelDeleteOrder?delete="+vl.deleteOrder+"'>Delete</a></td>");
+								listDep.push("<td><a onClick=deleteOrder('"+vl.deleteOrder+"')>Delete</a></td>");
 								listDep.push("<td>"+vl.orderDetailId+"</td>");
 								listDep.push("<td>"+vl.orderName+"</td>");
 								listDep.push("<td>"+vl.orderNameDetail+"</td>");
@@ -357,7 +360,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 							listDep.push("<tr>");
 							listDep.push("<td colspan=3>"+v.total+"</td>");
-							listDep.push("<td colspan=10><a href='"+v.checkoutUrl+"'>Check Out</a></td>");
+							listDep.push("<td colspan=10><input type='text' id='coUrl' value='"+v.checkoutUrl+"'></td>");
 							listDep.push("</tr>");
 						});
 
@@ -370,6 +373,70 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			});
 
 		});
+
+		function deleteOrder(url) {
+			$('#popup').modal({backdrop: 'static', keyboard: false});
+
+			$.getJSON("<?php echo base_url(); ?>HotelDeleteOrder",  { 
+					// hotel: hotelSelect
+					delete: url
+				}, function (response) {
+				if(response.error === 200) {
+
+					$('#hotelDetail').empty();
+					
+					var hotelSelect = $('input[name=pilHotel]:checked').val();
+
+					$.getJSON("<?php echo base_url(); ?>HotelAddOrder",  { 
+						// hotel: hotelSelect
+						hotel: "772101_2018-05-30_1_1_0_0_1"
+					}, function (data) {
+						// console.log(data);
+						// if(data.error === 211) {
+						// 	$('#popup').modal('hide');
+						// 	alert(data.msg);
+						// } else if(data.error === 200) {
+						// 	$('#popup').modal('hide');
+						// 	alert('Success');
+						// }
+
+						var listDep = [];
+						var listArr = [];
+
+						$.each(data.data, function(k, v) {
+							$.each(v.list, function(ky, vl) {
+								listDep.push("<tr>");
+								// listDep.push("<td><a href='<?php echo base_url(); ?>HotelDeleteOrder?delete="+vl.deleteOrder+"'>Delete</a></td>");
+								listDep.push("<td><a onClick=deleteOrder('"+vl.deleteOrder+"')>Delete</a></td>");
+								listDep.push("<td>"+vl.orderDetailId+"</td>");
+								listDep.push("<td>"+vl.orderName+"</td>");
+								listDep.push("<td>"+vl.orderNameDetail+"</td>");
+								listDep.push("<td>"+vl.roomId+"</td>");
+								listDep.push("<td>"+vl.rooms+"</td>");
+								listDep.push("<td>"+vl.adult+"</td>");
+								listDep.push("<td>"+vl.child+"</td>");
+								listDep.push("<td>"+vl.startdate+"</td>");
+								listDep.push("<td>"+vl.enddate+"</td>");
+								listDep.push("<td>"+vl.nights+"</td>");
+								listDep.push("<td>"+vl.price+"</td>");
+								listDep.push("<td><img src='"+vl.orderPhoto+"' ></td>");
+								listDep.push("</tr>");
+							});
+
+							listDep.push("<tr>");
+							listDep.push("<td colspan=3>"+v.total+"</td>");
+							listDep.push("<td colspan=10><input type='text' id='coUrl' value='"+v.checkoutUrl+"'></td>");
+							listDep.push("</tr>");
+						});
+
+						$("<tbody/>", {html: listDep.join("")}).appendTo("#hotelDetail");
+
+						$('#popup').modal('hide');
+
+					});
+				}								
+			});
+		}
 
 
 	</script>
