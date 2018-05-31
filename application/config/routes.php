@@ -91,7 +91,6 @@ $route['HotelOrder'] = 'HotelAPI/Hotel_Order';
 $route['HotelCheckoutPageRequest'] = 'HotelAPI/Hotel_Checkout_Page_Request';
 $route['HotelCheckoutLogin'] = 'HotelAPI/Hotel_Checkout_Login';
 $route['HotelCheckoutCustomer'] = 'HotelAPI/Hotel_Checkout_Customer';
-$route['HotelAvailable ayment'] = 'HotelAPI/Hotel_Available';
 $route['HotelCheckoutPayment'] = 'HotelAPI/Hotel_Checkout_Payment';
 
 // Train API

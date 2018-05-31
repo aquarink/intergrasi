@@ -1,0 +1,34 @@
+{
+	"output_type": "json",
+	"diagnostic": {
+		"status": 200,
+		"elapsetime": "1.7074",
+		"memoryusage": "11.09MB",
+		"confirm": "success",
+		"lang": "en",
+		"currency": "IDR"
+	},
+	"orderId": 120003,
+	"banks": [
+		{
+			"photo_1": "httpss://www.sandbox.tiket.com/images/ico_bca.png",
+			"photo_2": "httpss://www.sandbox.tiket.com/images/ico_prima.png",
+			"Nama": "PT. Global Tiket Network",
+			"Bank": "BCA",
+			"Cabang": "Jakarta",
+			"No Rekening": "52 6032 2488"
+		},
+		{
+			"photo_1": "httpss://www.sandbox.tiket.com/images/ico_mandiri.png",
+			"photo_2": "httpss://www.sandbox.tiket.com/images/ico_atm.png",
+			"Nama": "PT. Global Tiket Network",
+			"Bank": " Mandiri",
+			"Cabang": "Pelni",
+			"No Rekening": "11 7000 606 9959"
+		}
+	],
+	"message": "Please transfer the payment to make a booking. You have <strong>3 hours</strong> to complete the payment.",
+	"confirm_payment": "httpss://api-sandbox.tiket.com/confirmpayment/save?orderId=120003&hash=51ea6013f6a4347411e92cbbf98452de",
+	"grand_total": 60045,
+	"token": "5a80dc2ccce351eeb412e835b651edb9"
+}

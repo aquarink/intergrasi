@@ -10,6 +10,7 @@ class HotelAPI extends CI_Controller {
 		$this->load->helper('url');
 		$this->load->helper('html');
 		$this->load->helper('form');
+		$this->load->helper('file');
 
 		$this->load->library('session');
 		$this->load->library('user_agent');
@@ -230,7 +231,7 @@ class HotelAPI extends CI_Controller {
 
 			$getResponse = $this->Request_Model->httpGet($request);
 
-			$getDetail = json_decode($getResponse['output'], true);
+			$getDetail = json_decode($getResponse['output'], true); 
 
 			if($getResponse['status'] == 200) {
 
@@ -504,7 +505,7 @@ class HotelAPI extends CI_Controller {
 			$key = "&token=624cb009761ecadbd0042685a4a9d491f475b7df";
 			$format = "&output=json";
 
-			$request = $urlDelete.$key.$format;
+			$request = $urlCheckout.$key.$format;
 
 			$getResponse = $this->Request_Model->httpGet($request);
 			if($getResponse['status'] == 200) {
@@ -551,6 +552,7 @@ class HotelAPI extends CI_Controller {
 
 		if($validate_token) {
 			// TRUE
+			$parms = "checkout/checkout_customer";
 			$salutation = "?salutation=".$this->input->get('salutation');
 			$firstName = "&firstName=".$this->input->get('firstName');
 			$lastName = "&lastName=".$this->input->get('lastName');
@@ -563,24 +565,122 @@ class HotelAPI extends CI_Controller {
 			$conPhone = "&conPhone=".$this->input->get('conPhone');
 			$detailId = "&detailId=".$this->input->get('detailId');
 			$country = "&country=".$this->input->get('country');
-			$key = "&token=".$this->session->userdata('hotel_token_session');
+			// $key = "&token=".$this->session->userdata('hotel_token_session');
+			$key = "&token=624cb009761ecadbd0042685a4a9d491f475b7df";
 			$format = "&output=json";
 
-			$request = $salutation.$firstName.$lastName.$emailAddress.$phone.$conSalutation.$conFirstName.$conLastName.$conEmailAddress.$conPhone.$detailId.$country.$key.$format;
+			$request = $url.$parms.$salutation.$firstName.$lastName.$emailAddress.$phone.$conSalutation.$conFirstName.$conLastName.$conEmailAddress.$conPhone.$detailId.$country.$key.$format;
 
 			$getResponse = $this->Request_Model->httpGet($request);
 			if($getResponse['status'] == 200) {
-				$getDelete = json_decode($getResponse['output'], true);
+
+				$hotelFile = FCPATH.'files/hotel/orders/';
+				$hotelFileUrl = base_url().'files/hotel/orders/';
+				if (!is_dir($hotelFile)) {
+					mkdir($hotelFile, 0777, TRUE);
+				}
+
+				$hotelOrderFilename = $this->session->userdata('hotel_token_session').'.json';
+
+				// FIND ON FILE
+				if (!file_exists($hotelFile.$hotelOrderFilename)) {
+					write_file($hotelFile.$hotelOrderFilename, $getResponse['output']);	
+				}
+
+				// CHECKOUT PAYMENT AVAILABLE API
+				$param = "checkout/checkout_payment";
+				// $requestPayment = $url.$param.$key.$format;
+				$requestPayment = "http://localhost/abunawas/files/json-example/AvailablePayment.json";
+				$getResponsePayment = $this->Request_Model->httpGet($requestPayment);
+				$getPaymentAvailable = json_decode($getResponsePayment['output'], true);
+
+				if($getResponsePayment['status'] == 200) {
+					foreach ($getPaymentAvailable['available_payment'] as $kData => $vData) {
+						$id = str_replace('/', '', substr($vData['link'],-2));
+						$payAvailable[$id]['id'] = $id;
+						$payAvailable[$id]['type'] = $vData['text'];						 
+					}
+
+					echo json_encode($payAvailable);
+				}
 			}
 		}
 	}
-	public function Hotel_Available()
-	{
-
-	}
-
 	public function Hotel_Checkout_Payment()
 	{
-		
+		$url = $this->config->item('tiket_api_url_dev');
+		if(empty($this->session->userdata('hotel_token_session'))) {
+			$getToken = $url."apiv1/payexpress?method=getToken&secretkey=".$this->config->item('tiket_secret_key')."&output=json";
+			$getTokenResponse = $this->Request_Model->httpGet($getToken);
+			if($getTokenResponse['status'] == 200) {
+
+				$parsetoken = json_decode($getTokenResponse['output'], true);
+				$this->session->set_userdata('hotel_token_session', $parsetoken['token']);
+
+			}
+			
+		}
+
+		$validate_token = $this->Token_Model->validateToken($this->session->userdata('hotel_token_session'));
+
+		if($validate_token) {
+			// TRUE
+			$paymentMethodCode = $this->input->get('code');
+
+			if($paymentMethodCode == 2) {
+				// Transfer Bank
+				// $methodeUrl = $url."checkout/checkout_payment/2?token=".$this->session->userdata('hotel_token_session')."&currency=IDR&btn_booking=1&output=json";
+				$methodeUrl = "http://localhost/abunawas/files/json-example/ForBankTransfer.json";
+
+				$getResponse = $this->Request_Model->httpGet($methodeUrl);
+				if($getResponse['status'] == 200) {
+					$hotelPayment = json_decode($getResponse['output'], true);
+
+					foreach($hotelPayment as $payment) {
+						$paymentInfo[$payment['orderId']]['orderiId'] = $payment['orderId'];
+						$paymentInfo[$payment['orderId']]['bank'] = $payment['banks'];
+						$paymentInfo[$payment['orderId']]['message'] = $payment['message'];
+						$paymentInfo[$payment['orderId']]['grandTotal'] = $payment['grand_total'];
+
+						$hotelPaymentFile = FCPATH.'files/hotel/payments/';
+						$hotelPaymentFileUrl = base_url().'files/hotel/payments/';
+						if (!is_dir($hotelPaymentFile)) {
+							mkdir($hotelPaymentFile, 0777, TRUE);
+						}
+						$hotelPaymentData = "payment-url-".$payment['orderId'].'.json';
+
+						// FIND ON FILE
+						if (!file_exists($hotelPaymentFile.$hotelPaymentData)) {
+							write_file($hotelPaymentFile.$hotelPaymentData, $payment['confirm_payment']);	
+						}
+					}
+
+					echo json_encode($paymentInfo);
+				}
+			} elseif ($paymentMethodCode == 3) {
+				// Klik BCA
+				// $methodeUrl = $url."checkout/checkout_payment/3?token=".$this->session->userdata('hotel_token_session')."&user_bca=".$this->input->get('klikbcaid')."&currency=IDR&btn_booking=1&output=json";
+
+				$methodeUrl = "http://localhost/abunawas/files/json-example/ForKlikBCA.json";
+
+				$getResponse = $this->Request_Model->httpGet($methodeUrl);
+				if($getResponse['status'] == 200) {
+					$hotelPayment = json_decode($getResponse['output'], true);
+
+					foreach($hotelPayment as $payment) {
+						$paymentInfo[$payment['orderId']]['orderiId'] = $payment['orderId'];
+						$paymentInfo[$payment['orderId']]['message'] = $payment['message'];
+						$paymentInfo[$payment['orderId']]['grandTotal'] = $payment['grand_total'];
+					}
+
+					echo json_encode($paymentInfo);
+				}
+			} elseif ($paymentMethodCode == 4) {
+				// Transfer (instant confirmation)
+				$methodeUrl = $url."payment/checkout_payment/?payment_type=4&token=".$this->session->userdata('hotel_token_session')."&output=json";
+			} elseif ($paymentMethodCode == 20) {
+				$methodeUrl = $url."checkout/checkout_payment/2?token=".$this->session->userdata('hotel_token_session')."&currency=IDR&btn_booking=1&output=json";
+			}
+		}
 	}
 }
