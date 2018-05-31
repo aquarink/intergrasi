@@ -29,6 +29,36 @@ class Cyrusku_Model extends CI_Model {
         return $this->db->affected_rows();
     }
 
+    public function insertProduct($command,$product,$amount,$msisdn,$trxid,$signature,$rs_result,$rs_msg,$rs_trxid,$dr_sn,$send_type)
+    {
+        $trx_datetime = date('Y-m-d H:i:s');
+
+        $sql = "INSERT INTO cyrusku_api_trx(command,product,amount,msisdn,trxid,signature,rs_result,rs_msg,rs_trxid,dr_sn,send_type,trx_datetime) "
+                . "VALUES("
+                . "" . $this->db->escape($command) . ", "
+                . "" . $this->db->escape($product) . ", "
+                . "" . $this->db->escape($amount) . ", "
+                . "" . $this->db->escape($msisdn) . ", "
+                . "" . $this->db->escape($trxid) . ", "
+                . "" . $this->db->escape($signature) . ", "
+                . "" . $this->db->escape($rs_result) . ", "
+                . "" . $this->db->escape($rs_msg) . ", "
+                . "" . $this->db->escape($rs_trxid) . ", "
+                . "" . $this->db->escape($dr_sn) . ", "
+                . "" . $this->db->escape($send_type) . ", "
+                . "" . $this->db->escape($trx_datetime) . ")";
+        $this->db->query($sql);
+        return $this->db->affected_rows();
+    }
+
+    public function updateProduct($rs_trxid,$trxid,$dr_sn) {
+        $sql = "UPDATE cyrusku_api_trx SET "
+                . "dr_sn = " . $this->db->escape($dr_sn) . ""
+                . " WHERE rs_trxid = " . $this->db->escape($trxid) . " AND trxid = " . $this->db->escape($trxid) . "";
+        $this->db->query($sql);
+        return $this->db->affected_rows();
+    }
+
     public function updateSn($rs_trxid,$trxid,$dr_sn) {
         $sql = "UPDATE cyrusku_api_trx SET "
                 . "dr_sn = " . $this->db->escape($dr_sn) . ""

@@ -36,67 +36,95 @@ class Request_Model extends CI_Model {
             'status' => $status,
             'output' => $output
         );
-  }
-
-  public function httpPost($url,$params) {
-    $postData = '';
-    foreach($params as $k => $v) { 
-        $postData .= $k . '='.$v.'&';
-    }
-    $postData = rtrim($postData, '&');
-
-    $ch = curl_init();  
-
-    curl_setopt($ch,CURLOPT_URL,$url);
-    curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
-    curl_setopt($ch,CURLOPT_HEADER, false); 
-    curl_setopt($ch, CURLOPT_POST, count($postData));
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);    
-
-    $output = curl_exec($ch);
-
-    curl_close($ch);
-    return $output;
-}
-
-public function httpPostXML($url,$xml) {
-
-    $curl = curl_init();
-
-    curl_setopt_array($curl, array(
-        CURLOPT_URL => $url,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => "",
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 30,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => "POST",
-        CURLOPT_POSTFIELDS => $xml,
-        CURLOPT_HTTPHEADER => array(
-            "Cache-Control: no-cache",
-            "Content-Type: text/xml",
-            "Postman-Token: 3438edde-5338-4b94-85be-7967cf3b06f3"
-        ),
-    ));
-
-    $output = curl_exec($curl);
-    $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-    curl_close($curl);
-
-    return array(
-        'status' => $status,
-        'output' => $output
-    );
-}
-
-public function arrayToXml($array, $rootElement = null, $xml = null) {
-    $_xml = $xml;
-
-    if ($_xml === null) {
-        $_xml = new SimpleXMLElement($rootElement !== null ? $rootElement : '<root/>');
     }
 
-    foreach ($array as $k => $v) {
+    public function httpPost($url,$param) {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => $param,
+            CURLOPT_HTTPHEADER => array(
+                "Cache-Control: no-cache",
+                "Content-Type: application/x-www-form-urlencoded",
+                "Postman-Token: 2871cb73-3d7e-4297-a1c8-c67c89c9dc23"
+            ),
+        ));
+
+        $output = curl_exec($curl);
+        $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+        return array(
+            'status' => $status,
+            'output' => $output
+        );
+    }
+
+    public function httpPost2($url,$params) {
+        $postData = '';
+        foreach($params as $k => $v) { 
+            $postData .= $k . '='.$v.'&';
+        }
+        $postData = rtrim($postData, '&');
+
+        $ch = curl_init();  
+
+        curl_setopt($ch,CURLOPT_URL,$url);
+        curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+        curl_setopt($ch,CURLOPT_HEADER, false); 
+        curl_setopt($ch, CURLOPT_POST, count($postData));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);    
+
+        $output = curl_exec($ch);
+
+        curl_close($ch);
+        return $output;
+    }
+
+    public function httpPostXML($url,$xml) {
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => $xml,
+            CURLOPT_HTTPHEADER => array(
+                "Cache-Control: no-cache",
+                "Content-Type: text/xml",
+                "Postman-Token: 3438edde-5338-4b94-85be-7967cf3b06f3"
+            ),
+        ));
+
+        $output = curl_exec($curl);
+        $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+
+        return array(
+            'status' => $status,
+            'output' => $output
+        );
+    }
+
+    public function arrayToXml($array, $rootElement = null, $xml = null) {
+        $_xml = $xml;
+
+        if ($_xml === null) {
+            $_xml = new SimpleXMLElement($rootElement !== null ? $rootElement : '<root/>');
+        }
+
+        foreach ($array as $k => $v) {
             if (is_array($v)) { //nested array
                 arrayToXml($v, $k, $_xml->addChild($k));
             } else {

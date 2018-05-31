@@ -115,5 +115,5 @@ $route['CyruskuReversal'] = 'CyruskuAPI/Cyrusku_Reversal';
 $route['CyruskuCekTagihan'] = 'CyruskuAPI/Cyrusku_Cek_Tagihan';
 $route['CyruskuBayarTagihan'] = 'CyruskuAPI/Cyrusku_Bayar_Tagihan';
 $route['CyruskuCekSaldo'] = 'CyruskuAPI/Cyrusku_Cek_Saldo';
-$route['CyruskuCekHarga'] = 'CyruskuAPI/Cyrusku_Cek_Harga';
+$route['CyruskuCekProduct'] = 'CyruskuAPI/Cyrusku_Cek_Product';
 

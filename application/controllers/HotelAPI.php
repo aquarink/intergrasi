@@ -136,9 +136,20 @@ class HotelAPI extends CI_Controller {
 	}
 	public function Search_By_Area()
 	{
-		// Search Autocomplete API
-		$token_tiket = $this->config->item('tiket_api_key');
-		$validate_token = $this->Token_Model->validateToken($token_tiket);
+		$url = $this->config->item('tiket_api_url_dev');
+		if(empty($this->session->userdata('hotel_token_session'))) {
+			$getToken = $url."apiv1/payexpress?method=getToken&secretkey=".$this->config->item('tiket_secret_key')."&output=json";
+			$getTokenResponse = $this->Request_Model->httpGet($getToken);
+			if($getTokenResponse['status'] == 200) {
+
+				$parsetoken = json_decode($getTokenResponse['output'], true);
+				$this->session->set_userdata('hotel_token_session', $parsetoken['token']);
+
+			}
+			
+		}
+
+		$validate_token = $this->Token_Model->validateToken($this->session->userdata('hotel_token_session'));
 
 		if($validate_token) {
 			// TRUE

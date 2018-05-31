@@ -271,9 +271,9 @@ class CyruskuAPI extends CI_Controller {
 			echo json_encode($data);
 		}
 	}
-	public function Cyrusku_Cek_Harga()
+	public function Cyrusku_Cek_Product()
 	{
-		$url = $this->config->item('cyrusku_api_url');
+		$url = "https://cyrusku.cyruspad.com/interkoneksi/productcyrusku.asp";
 		$userid = $this->config->item('cyrusku_api_username');
 		$password = $this->config->item('cyrusku_api_password');
 		$time = date('YmdHis');
@@ -282,32 +282,17 @@ class CyruskuAPI extends CI_Controller {
 		$product_id = '';
 		$operator = '';
 
-		$valueXml = '<evoucher>';
-		$valueXml .= '<command>PRODUCTCYRUSKU</command>';
-		$valueXml .= '<username>'.$userid.'</username>';
-		$valueXml .= '<product_id>'.$product_id.'</product_id>';
-		$valueXml .= '<operator>'.$operator.'</operator>';
-		$valueXml .= '<time>'.$time.'</time>';
-		$valueXml .= '<signature>'.$signature.'</signature></evoucher>';
+		$params = 'command=PRODUCTCYRUSKU';
+		$params .= '&username=6282298407898';
+		$params .= '&time=20180531062722';
+		$params .= '&signature=0ab6955b586702402d6259b5c1f9bc9d';
+		$params .= '&product_id=';
+		$params .= '&operator=';
 
 		// Request
-		$send = $this->Request_Model->httpPostXML($url,$valueXml);
-		// Array ( [status] => 301 [output] => ) 
+		$send = $this->Request_Model->httpPost($url,$params);
 		if($send['status'] == 200) {
-			// Response XML
-			// $responseXml = new SimpleXMLElement($send['output']);
-		
-			// <result>0</result>
-			// <msg>Saldo Rp. 251680</msg>
-			// <saldo>10001</trxid>
-
-			print_r($send['output']);
-
-			// $data = array(
-			// 	'saldo' => $responseXml['saldo']
-			// );
-
-			// echo json_encode($data);
+						
 		}
 	}
 }
