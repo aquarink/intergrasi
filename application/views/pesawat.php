@@ -213,16 +213,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							<a id="ChooseFlight" class="btn btn-success">Choose Flight</a>
 						</div>
 					</div>
-					<div role="tabpanel" class="tab-pane fade" id="KeretaAPi">
-						<div class="row">
-							form pencarian tiket kereta api
-						</div>
-					</div>
-					<div role="tabpanel" class="tab-pane fade" id="Hotel">
-						<div class="row">
-							form pencarian hotel
-						</div>
-					</div>
 				</div>
 
 			</div>
@@ -377,18 +367,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		    		var returnDate = '';
 		    	}
 
-				$('input[name=pilDep]:checked').val();
-				$('input[name=pilArr]:checked').val();
+				var dep = $('input[name=pilDep]:checked').val();
+				var arr = $('input[name=pilArr]:checked').val();
 
 				$('#popup').modal({backdrop: 'static', keyboard: false});
 
 				// AJAX
 		    	$.getJSON("<?php echo base_url(); ?>GetFlightData", 
 		    	{
-		    		goflightid: $('#departAirportCode').val(),
-		    		goflightdate: $('#departDate').val(),
-		    		retflightid: $('#departAirportCode').val(),
-		    		retflightdate: returnDate
+		    		depatureId: dep,
+		    		depatureDate: $('#departDate').val(),
+		    		returnId: arr,
+		    		returnDate: returnDate
 		    	}, function (data) {
 
 		    		console.log(data);

@@ -42,9 +42,11 @@ $config['index_page'] = '';
 | TIKET API TOKEN
 |--------------------------------------------------------------------------
 */
-$config['tiket_api_url_dev'] = 'http://api-sandbox.tiket.com/';
-$config['tiket_api_url_prod'] = '7f7c0f2a553733038d2680284a2e0bdd962e076b';
-$config['tiket_secret_key'] = 'a08e0ceee3665065e36b7b038bdfd03e';
+// $config['tiket_api_url_dev'] = 'http://api-sandbox.tiket.com/';
+$config['tiket_api_url_dev'] = 'https://api.tiket.com/';
+$config['tiket_api_url_prod'] = '';
+// $config['tiket_secret_key'] = 'a08e0ceee3665065e36b7b038bdfd03e';
+$config['tiket_secret_key'] = '56c8624d6a62e1ab22f0d9915ff2d43c';
 
 /*
 |--------------------------------------------------------------------------
