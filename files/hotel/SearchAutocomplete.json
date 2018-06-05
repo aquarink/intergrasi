@@ -1,0 +1,50 @@
+{
+	"business:23506791": {
+		"name": "Maharani Beach Hotel",
+		"business_uri": "http://localhost/abunawas/ViewDetailHotel?detail=https://api.tiket.com/hotel/indonesia/badung/area-kuta/maharani-beach-hotel-1?uid=business%3A23506791",
+		"address": "Badung, Bali, Indonesia",
+		"mkd": "a59c512bb97cc363279b904a86170a95f166a244"
+	},
+	"business:3852": {
+		"name": "Maharani Hotel Jakarta",
+		"business_uri": "http://localhost/abunawas/ViewDetailHotel?detail=https://api.tiket.com/hotel/indonesia/jakarta-selatan/area-mampang-prapatan/maharani-hotel-jakarta?uid=business%3A3852",
+		"address": "Jakarta Selatan, Jakarta, Indonesia",
+		"mkd": "a59c512bb97cc363279b904a86170a95f166a244"
+	},
+	"business:3874": {
+		"name": "Maharadja Hotel",
+		"business_uri": "http://localhost/abunawas/ViewDetailHotel?detail=https://api.tiket.com/hotel/indonesia/jakarta-selatan/area-mampang-prapatan/maharadja-hotel?uid=business%3A3874",
+		"address": "Jakarta Selatan, Jakarta, Indonesia",
+		"mkd": "a59c512bb97cc363279b904a86170a95f166a244"
+	},
+	"business:3772": {
+		"name": "Asana Puri Maharani Hotel",
+		"business_uri": "http://localhost/abunawas/ViewDetailHotel?detail=https://api.tiket.com/hotel/indonesia/denpasar/denpasar/puri-maharani-boutique-hotel-spa?uid=business%3A3772",
+		"address": "Denpasar, Bali, Indonesia",
+		"mkd": "a59c512bb97cc363279b904a86170a95f166a244"
+	},
+	"business:27684824": {
+		"name": "Maharani Guesthouse Tebet Syariah",
+		"business_uri": "http://localhost/abunawas/ViewDetailHotel?detail=https://api.tiket.com/hotel/indonesia/jakarta-selatan/area-tebet/maharani-guesthouse-tebet-syariah?uid=business%3A27684824",
+		"address": "Jakarta Selatan, Jakarta, Indonesia",
+		"mkd": "a59c512bb97cc363279b904a86170a95f166a244"
+	},
+	"business:22290157": {
+		"name": "Kori Maharani Villas",
+		"business_uri": "http://localhost/abunawas/ViewDetailHotel?detail=https://api.tiket.com/hotel/indonesia/gianyar/area-gianyar/kori-maharani-villas?uid=business%3A22290157",
+		"address": "Gianyar, Bali, Indonesia",
+		"mkd": "a59c512bb97cc363279b904a86170a95f166a244"
+	},
+	"business:22850071": {
+		"name": "Maharaja Villas",
+		"business_uri": "http://localhost/abunawas/ViewDetailHotel?detail=https://api.tiket.com/hotel/indonesia/badung/area-kerobokan/maharaja-villas?uid=business%3A22850071",
+		"address": "Badung, Bali, Indonesia",
+		"mkd": "a59c512bb97cc363279b904a86170a95f166a244"
+	},
+	"business:23758541": {
+		"name": "Maharani Guesthouse",
+		"business_uri": "http://localhost/abunawas/ViewDetailHotel?detail=https://api.tiket.com/hotel/indonesia/yogyakarta/prawirotaman/maharani-guesthouse?uid=business%3A23758541",
+		"address": "Yogyakarta, Yogyakarta, Indonesia",
+		"mkd": "a59c512bb97cc363279b904a86170a95f166a244"
+	}
+}

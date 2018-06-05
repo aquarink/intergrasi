@@ -1,0 +1,20 @@
+[
+	{
+		"id_airport": "19",
+		"airport_code": "BKS",
+		"airport_name": "Fatmawati Soekarno",
+		"country_id": "id",
+		"country_name": "Indonesia",
+		"input_datetime": "2018-05-14 12:24:41",
+		"update_datetime": null
+	},
+	{
+		"id_airport": "35",
+		"airport_code": "CGK",
+		"airport_name": "Soekarno Hatta",
+		"country_id": "id",
+		"country_name": "Indonesia",
+		"input_datetime": "2018-05-14 12:24:42",
+		"update_datetime": null
+	}
+]

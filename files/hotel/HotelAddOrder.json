@@ -1,0 +1,46 @@
+{
+	"error": 211,
+	"msg": "Success get data",
+	"data": {
+		"40985478": {
+			"orderId": "40985478",
+			"list": [
+				{
+					"expire": -15,
+					"orderDetailId": "61005686",
+					"orderExpireDatetime": "2018-05-30 15:29:13",
+					"orderType": "hotel",
+					"orderName": "The Sunset Hotel & Restaurant",
+					"orderNameDetail": "Super Deluxe Room Only",
+					"orderDetailStatus": "active",
+					"tenor": "0",
+					"roomId": "2179",
+					"rooms": "1",
+					"adult": "1",
+					"child": "0",
+					"startdate": "31 Mei 2018",
+					"enddate": "01 Jun 2018",
+					"nights": "1",
+					"totalCharge": "0.00",
+					"startdateOriginal": "1527699600",
+					"enddateOriginal": "1527786000",
+					"price": 324000,
+					"pricePerNight": 324000,
+					"orderPhoto": "https://sandbox.tiket.com/img/business/s/u/business-super-deluxe-room-only-thesunsethotelrestaurant-3369.s.jpg",
+					"tax": 0,
+					"itemCharge": 0,
+					"subtotalCharge": "324000.00",
+					"deleteOrder": "https://api-sandbox.tiket.com/order/delete_order?order_detail_id=61005686&order_id=40985478&order_hash=624cb009761ecadbd0042685a4a9d491f475b7df",
+					"businessId": "3623"
+				}
+			],
+			"total": 324000,
+			"totalTax": 0,
+			"totalWithoutTax": 324000,
+			"countInstallment": 0,
+			"discount": 0,
+			"discount_amount": 0,
+			"checkoutUrl": "https://api-sandbox.tiket.com/order/checkout/40985478/IDR"
+		}
+	}
+}

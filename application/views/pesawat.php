@@ -373,12 +373,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				$('#popup').modal({backdrop: 'static', keyboard: false});
 
 				// AJAX
-		    	$.getJSON("<?php echo base_url(); ?>GetFlightData", 
+		    	$.getJSON("<?php echo base_url(); ?>FlightAddOrder", 
 		    	{
 		    		depatureId: dep,
-		    		depatureDate: $('#departDate').val(),
 		    		returnId: arr,
-		    		returnDate: returnDate
+		    		adult: $('#adultPass').val(),
+		    		child: $('#childPass').val(),
+		    		invant: $('#invantPass').val()
 		    	}, function (data) {
 
 		    		console.log(data);

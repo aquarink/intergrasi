@@ -1,0 +1,104 @@
+{
+	"84119620180606": {
+		"business_id": "23506791",
+		"business_name": "Maharani Beach Hotel",
+		"lat": "-8.71997000000000000000",
+		"long": "115.16933000000000000000",
+		"room_id": "841196",
+		"room_name": "Superior Room",
+		"bookUri": "https://api.tiket.com/order/add/hotel?startdate=2018-06-06&night=1&room=1&adult=1&child=0&minstar=0&maxstar=0&minprice=0&maxprice=0&facilities=0&locations=0&hotelname=0&is_partner=0&room_id=841196&hasPromo=1&enddate=2018-06-07&room_max_occupancy=2",
+		"minimum_stays": "1",
+		"with_breakfasts": "1",
+		"price": "579695.00",
+		"currency": "IDR",
+		"room_image": {
+			"room_image_0": "https://tiket.com/img/business/s/u/business-superior-room-maharanibeachhotel-9275.room.jpg",
+			"room_image_1": "https://tiket.com/img/business/s/u/business-superior-room-maharanibeachhotel-bali198.room.jpg",
+			"room_image_2": "https://tiket.com/img/business/s/u/business-superior-room-maharanibeachhotel-bali4716.room.jpg",
+			"room_image_3": "https://tiket.com/img/business/s/u/business-superior-room-maharanibeachhotel-bali5969.room.jpg"
+		},
+		"room_facility": {
+			"room_facility_0": "AC",
+			"room_facility_1": "Chair",
+			"room_facility_2": "Mesin pembuat kopi/teh",
+			"room_facility_3": "Meja",
+			"room_facility_4": "Shower Panas and Dingin",
+			"room_facility_5": "Internet - Wifi",
+			"room_facility_6": "Televisi LCD/layar plasma",
+			"room_facility_7": "Bar kecil",
+			"room_facility_8": "Cermin",
+			"room_facility_9": "Satelit/TV kabel",
+			"room_facility_10": "Shower",
+			"room_facility_11": "Sandal",
+			"room_facility_12": "Telepon"
+		},
+		"mkd": "a59c512bb97cc363279b904a86170a95f166a244"
+	},
+	"84119720180606": {
+		"business_id": "23506791",
+		"business_name": "Maharani Beach Hotel",
+		"lat": "-8.71997000000000000000",
+		"long": "115.16933000000000000000",
+		"room_id": "841197",
+		"room_name": "Deluxe Pool View",
+		"bookUri": "https://api.tiket.com/order/add/hotel?startdate=2018-06-06&night=1&room=1&adult=1&child=0&minstar=0&maxstar=0&minprice=0&maxprice=0&facilities=0&locations=0&hotelname=0&is_partner=0&room_id=841197&hasPromo=1&enddate=2018-06-07&room_max_occupancy=2",
+		"minimum_stays": "1",
+		"with_breakfasts": "1",
+		"price": "665332.00",
+		"currency": "IDR",
+		"room_image": {
+			"room_image_0": "https://tiket.com/img/business/d/e/business-deluxe-pool-view-maharanibeachhotel-bali2342.room.jpg",
+			"room_image_1": "https://tiket.com/img/business/d/e/business-deluxe-pool-view-maharanibeachhotel-bali2671.room.jpg",
+			"room_image_2": "https://tiket.com/img/business/d/e/business-deluxe-pool-view-maharanibeachhotel-bali8844.room.jpg"
+		},
+		"room_facility": {
+			"room_facility_0": "AC",
+			"room_facility_1": "Chair",
+			"room_facility_2": "Mesin pembuat kopi/teh",
+			"room_facility_3": "Meja",
+			"room_facility_4": "Shower Panas and Dingin",
+			"room_facility_5": "Internet - Wifi",
+			"room_facility_6": "Televisi LCD/layar plasma",
+			"room_facility_7": "Bar kecil",
+			"room_facility_8": "Cermin",
+			"room_facility_9": "Satelit/TV kabel",
+			"room_facility_10": "Shower",
+			"room_facility_11": "Sandal",
+			"room_facility_12": "Telepon"
+		},
+		"mkd": "a59c512bb97cc363279b904a86170a95f166a244"
+	},
+	"84119820180606": {
+		"business_id": "23506791",
+		"business_name": "Maharani Beach Hotel",
+		"lat": "-8.71997000000000000000",
+		"long": "115.16933000000000000000",
+		"room_id": "841198",
+		"room_name": "Deluxe Ocean View",
+		"bookUri": "https://api.tiket.com/order/add/hotel?startdate=2018-06-06&night=1&room=1&adult=1&child=0&minstar=0&maxstar=0&minprice=0&maxprice=0&facilities=0&locations=0&hotelname=0&is_partner=0&room_id=841198&hasPromo=1&enddate=2018-06-07&room_max_occupancy=2",
+		"minimum_stays": "1",
+		"with_breakfasts": "1",
+		"price": "836605.00",
+		"currency": "IDR",
+		"room_image": {
+			"room_image_0": "https://tiket.com/img/business/d/e/business-deluxe-ocean-view-maharanibeachhotel-bali6662.room.jpg",
+			"room_image_1": "https://tiket.com/img/business/d/e/business-deluxe-ocean-view-maharanibeachhotel-bali9248.room.jpg"
+		},
+		"room_facility": {
+			"room_facility_0": "AC",
+			"room_facility_1": "Chair",
+			"room_facility_2": "Mesin pembuat kopi/teh",
+			"room_facility_3": "Meja",
+			"room_facility_4": "Shower Panas and Dingin",
+			"room_facility_5": "Internet - Wifi",
+			"room_facility_6": "Televisi LCD/layar plasma",
+			"room_facility_7": "Bar kecil",
+			"room_facility_8": "Cermin",
+			"room_facility_9": "Satelit/TV kabel",
+			"room_facility_10": "Shower",
+			"room_facility_11": "Sandal",
+			"room_facility_12": "Telepon"
+		},
+		"mkd": "a59c512bb97cc363279b904a86170a95f166a244"
+	}
+}

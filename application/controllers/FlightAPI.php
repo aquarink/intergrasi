@@ -138,40 +138,40 @@ class FlightAPI extends CI_Controller {
 
 				$flightsData = json_decode($jsonData['output'], true);
 
-				foreach ($flightsData['departures']['result'] as $key => $value) {
+				foreach ($flightsData['returns']['result'] as $key => $value) {
 					foreach ($value['flight_infos']['flight_info'] as $k => $v) {
 						// FIRST
-						$findResult['departures'][$v['flight_number']]['flight_id'] = $value['flight_id'];
-						$findResult['departures'][$v['flight_number']]['stop'] = $value['stop'];
-						$findResult['departures'][$v['flight_number']]['airlines_name'] = $value['airlines_name'];
+						$findResult['returns'][$v['flight_number']]['flight_id'] = $value['flight_id'];
+						$findResult['returns'][$v['flight_number']]['stop'] = $value['stop'];
+						$findResult['returns'][$v['flight_number']]['airlines_name'] = $value['airlines_name'];
 						// PRICE
-						$findResult['departures'][$v['flight_number']]['price']['price_value'] = $value['price_value'];
-						$findResult['departures'][$v['flight_number']]['price']['price_adult'] = $value['price_adult'];
-						$findResult['departures'][$v['flight_number']]['price']['price_child'] = $value['price_child'];
-						$findResult['departures'][$v['flight_number']]['price']['price_infant'] = $value['price_infant'];
+						$findResult['returns'][$v['flight_number']]['price']['price_value'] = $value['price_value'];
+						$findResult['returns'][$v['flight_number']]['price']['price_adult'] = $value['price_adult'];
+						$findResult['returns'][$v['flight_number']]['price']['price_child'] = $value['price_child'];
+						$findResult['returns'][$v['flight_number']]['price']['price_infant'] = $value['price_infant'];
 
 						// SECOND
 						// FROM
-						$findResult['departures'][$v['flight_number']]['flight_number'] = $v['flight_number'];
-						$findResult['departures'][$v['flight_number']]['departure_city'] = $v['departure_city'];
-						$findResult['departures'][$v['flight_number']]['departure_city_name'] = $v['departure_city_name'];
-						$findResult['departures'][$v['flight_number']]['departure_airport_name'] = $v['departure_airport_name'];
-						$findResult['departures'][$v['flight_number']]['departure_airport_terminal'] = $v['terminal'];
-						$findResult['departures'][$v['flight_number']]['departure_date_time'] = $v['departure_date_time'];
+						$findResult['returns'][$v['flight_number']]['flight_number'] = $v['flight_number'];
+						$findResult['returns'][$v['flight_number']]['departure_city'] = $v['departure_city'];
+						$findResult['returns'][$v['flight_number']]['departure_city_name'] = $v['departure_city_name'];
+						$findResult['returns'][$v['flight_number']]['departure_airport_name'] = $v['departure_airport_name'];
+						$findResult['returns'][$v['flight_number']]['departure_airport_terminal'] = $v['terminal'];
+						$findResult['returns'][$v['flight_number']]['departure_date_time'] = $v['departure_date_time'];
 						// TO
-						$findResult['departures'][$v['flight_number']]['arrival_city'] = $v['arrival_city'];
-						$findResult['departures'][$v['flight_number']]['departure_city_name'] = $v['arrival_city_name'];
-						$findResult['departures'][$v['flight_number']]['arrival_airport_name'] = $v['arrival_airport_name'];
-						$findResult['departures'][$v['flight_number']]['arrival_date_time'] = $v['arrival_date_time'];
+						$findResult['returns'][$v['flight_number']]['arrival_city'] = $v['arrival_city'];
+						$findResult['returns'][$v['flight_number']]['departure_city_name'] = $v['arrival_city_name'];
+						$findResult['returns'][$v['flight_number']]['arrival_airport_name'] = $v['arrival_airport_name'];
+						$findResult['returns'][$v['flight_number']]['arrival_date_time'] = $v['arrival_date_time'];
 						// Thumbnail
-						$findResult['departures'][$v['flight_number']]['img_src'] = $v['img_src'];
+						$findResult['returns'][$v['flight_number']]['img_src'] = $v['img_src'];
 						// DURATION
-						$findResult['departures'][$v['flight_number']]['duration_second'] = $v['duration_time'];
-						$findResult['departures'][$v['flight_number']]['duration_minute'] = $v['duration_minute'];
-						$findResult['departures'][$v['flight_number']]['duration_hour'] = $v['duration_hour'];
+						$findResult['returns'][$v['flight_number']]['duration_second'] = $v['duration_time'];
+						$findResult['returns'][$v['flight_number']]['duration_minute'] = $v['duration_minute'];
+						$findResult['returns'][$v['flight_number']]['duration_hour'] = $v['duration_hour'];
 						// BAGASI
-						$findResult['departures'][$v['flight_number']]['check_in_baggage'] = $v['check_in_baggage'];
-						$findResult['departures'][$v['flight_number']]['check_in_baggage_unit'] = $v['check_in_baggage_unit'];
+						$findResult['returns'][$v['flight_number']]['check_in_baggage'] = $v['check_in_baggage'];
+						$findResult['returns'][$v['flight_number']]['check_in_baggage_unit'] = $v['check_in_baggage_unit'];
 					}
 				}
 
@@ -423,33 +423,195 @@ class FlightAPI extends CI_Controller {
 		if($validate_token) {
 			// TRUE
 			$param = "flight_api/get_flight_data";
-			$depatureId = "?flight_id".$this->input->get('depatureId');
+			$depatureId = "?flight_id=".$this->input->get('depatureId');
 			$depatureDate = "&date=".$this->input->get('depatureDate');
-			$returnId = "&ret_flight_id".$this->input->get('returnId');
+			$returnId = "&ret_flight_id=".$this->input->get('returnId');
 			$returnDate = "&ret_date=".$this->input->get('returnDate');
 			$version = "&v=3";
 			$key = "&token=".$this->session->userdata('flight_token_session');	
 			$format = "&output=json";
 
-			echo $request = $url.$param.$depatureId.$depatureDate.$returnId.$returnDate.$version.$key.$format;
+			// $request = $url.$param.$depatureId.$depatureDate.$returnId.$returnDate.$version.$key.$format;
+			$request = base_url().'files/flight/GetFlightData.json';
 
 			$getResponse = $this->Request_Model->httpGet($request);
 			if($getResponse['status'] == 200) {
 				$checkFlight = json_decode($getResponse['output'], true);
 
-				echo "<pre>";
-				print_r($checkFlight);
+				// LION CAPTCHA
+				// TRUE
+				$paramCaptcha = "flight_api/getLionCaptcha";
+				$keyCaptcha = "&token=".$this->session->userdata('flight_token_session');	
+				$formatCaptcha = "&output=json";
+
+				// $requestCaptcha = $url.$paramCaptcha.$keyCaptcha.$formatCaptcha;
+				$requestCaptcha = base_url().'files/flight/LionCaptcha.json';
+
+				$getResponseCaptcha = $this->Request_Model->httpGet($requestCaptcha);
+				if($getResponseCaptcha['status'] == 200) {
+					$getCaptcha = json_decode($getResponseCaptcha['output'], true);
+					$this->session->set_userdata('lion_captcha_captcha', $getCaptcha['lioncaptcha']);
+					$this->session->set_userdata('lion_captcha_id', $getCaptcha['lionsessionid']);
+
+					// required separator
+					$flightData['flight']['required']['input'] = array_keys($checkFlight['required']);
+					$flightData['flight']['required']['data'] = array_values($checkFlight['required']);
+
+					// departures
+					$flightData['flight']['departures']['flightId'] = $checkFlight['departures']['flight_id'];
+					$flightData['flight']['departures']['airlinesName'] = $checkFlight['departures']['airlines_name'];
+					$flightData['flight']['departures']['flightDate'] = $checkFlight['departures']['flight_date'];
+					$flightData['flight']['departures']['departureCity'] = $checkFlight['departures']['departure_city'];
+					$flightData['flight']['departures']['arrivalCity'] = $checkFlight['departures']['arrival_city'];
+					$flightData['flight']['departures']['stop'] = $checkFlight['departures']['stop'];
+					$flightData['flight']['departures']['priceValue'] = $checkFlight['departures']['price_value'];
+					$flightData['flight']['departures']['priceAdult'] = $checkFlight['departures']['price_adult'];
+					$flightData['flight']['departures']['priceChild'] = $checkFlight['departures']['price_child'];
+					$flightData['flight']['departures']['priceInfant'] = $checkFlight['departures']['price_infant'];
+					$flightData['flight']['departures']['countAdult'] = $checkFlight['departures']['count_adult'];
+					$flightData['flight']['departures']['countChild'] = $checkFlight['departures']['count_child'];
+					$flightData['flight']['departures']['countInfant'] = $checkFlight['departures']['count_infant'];
+					$flightData['flight']['departures']['timestamp'] = $checkFlight['departures']['timestamp'];
+					$flightData['flight']['departures']['baggage'] = $checkFlight['departures']['check_in_baggage'];
+					$flightData['flight']['departures']['needBaggage'] = $checkFlight['departures']['need_baggage'];
+					$flightData['flight']['departures']['baggageUnit'] = $checkFlight['departures']['check_in_baggage_unit'];
+					$flightData['flight']['departures']['departureTime'] = $checkFlight['departures']['simple_departure_time'];
+					$flightData['flight']['departures']['departureDate'] = $checkFlight['departures']['departure_flight_date'];
+
+					$flightData['flight']['departures']['arrivalTime'] = $checkFlight['departures']['simple_arrival_time'];
+					$flightData['flight']['departures']['arrivalDate'] = $checkFlight['departures']['arrival_flight_date'];
+
+					$flightData['flight']['departures']['departureCity'] = $checkFlight['departures']['departure_city_name'];
+					$flightData['flight']['departures']['arrivalCity'] = $checkFlight['departures']['arrival_city_name'];
+					$flightData['flight']['departures']['airportName'] = $checkFlight['departures']['departure_airport_name'];
+					$flightData['flight']['departures']['arrivalAirport'] = $checkFlight['departures']['arrival_airport_name'];
+					$flightData['flight']['departures']['duration'] = $checkFlight['departures']['duration'];
+					$flightData['flight']['departures']['image'] = $checkFlight['departures']['image'];
+
+					// departures flight_infos
+					foreach ($checkFlight['departures']['flight_infos']['flight_info'] as $ky => $vl) {
+						$flightData['flight']['departures']['flight_info'] = $vl;
+					}
+
+					if(isset($checkFlight['returns'])) {
+						// returns
+						$flightData['flight']['returns']['flightId'] = $checkFlight['returns']['flight_id'];
+						$flightData['flight']['returns']['airlinesName'] = $checkFlight['returns']['airlines_name'];
+						$flightData['flight']['returns']['flightDate'] = $checkFlight['returns']['flight_date'];
+						$flightData['flight']['returns']['departureCity'] = $checkFlight['returns']['departure_city'];
+						$flightData['flight']['returns']['arrivalCity'] = $checkFlight['returns']['arrival_city'];
+						$flightData['flight']['returns']['stop'] = $checkFlight['returns']['stop'];
+						$flightData['flight']['returns']['priceValue'] = $checkFlight['returns']['price_value'];
+						$flightData['flight']['returns']['priceAdult'] = $checkFlight['returns']['price_adult'];
+						$flightData['flight']['returns']['priceChild'] = $checkFlight['returns']['price_child'];
+						$flightData['flight']['returns']['priceInfant'] = $checkFlight['returns']['price_infant'];
+						$flightData['flight']['returns']['countAdult'] = $checkFlight['returns']['count_adult'];
+						$flightData['flight']['returns']['countChild'] = $checkFlight['returns']['count_child'];
+						$flightData['flight']['returns']['countInfant'] = $checkFlight['returns']['count_infant'];
+						$flightData['flight']['returns']['timestamp'] = $checkFlight['returns']['timestamp'];
+						$flightData['flight']['returns']['baggage'] = $checkFlight['returns']['check_in_baggage'];
+						$flightData['flight']['returns']['needBaggage'] = $checkFlight['returns']['need_baggage'];
+						$flightData['flight']['returns']['baggageUnit'] = $checkFlight['returns']['check_in_baggage_unit'];
+						$flightData['flight']['returns']['departureTime'] = $checkFlight['returns']['simple_departure_time'];
+						$flightData['flight']['returns']['departureDate'] = $checkFlight['returns']['departure_flight_date'];
+
+						$flightData['flight']['returns']['arrivalTime'] = $checkFlight['returns']['simple_arrival_time'];
+						$flightData['flight']['returns']['arrivalDate'] = $checkFlight['returns']['arrival_flight_date'];
+
+						$flightData['flight']['returns']['departureCity'] = $checkFlight['returns']['departure_city_name'];
+						$flightData['flight']['returns']['arrivalCity'] = $checkFlight['returns']['arrival_city_name'];
+						$flightData['flight']['returns']['airportName'] = $checkFlight['returns']['departure_airport_name'];
+						$flightData['flight']['returns']['arrivalAirport'] = $checkFlight['returns']['arrival_airport_name'];
+						$flightData['flight']['returns']['duration'] = $checkFlight['returns']['duration'];
+						$flightData['flight']['returns']['image'] = $checkFlight['returns']['image'];
+
+						// departures flight_infos
+						foreach ($checkFlight['returns']['flight_infos']['flight_info'] as $ky => $vl) {
+							$flightData['flight']['returns']['flight_info'] = $vl;
+						}
+					}
+
+					$res = array(
+						'error' => 0,
+						'datas' => $flightData,
+						'msg' => 'Get flight data success'				
+					);
+
+					echo json_encode($res);
+				} else {
+					$res = array(
+						'error' => 1,
+						'datas' => 0,
+						'msg' => 'Disconnect from API 548'				
+					);
+
+					echo json_encode($res);
+				}
+			} else {
+				$res = array(
+					'error' => 1,
+					'datas' => 0,
+					'msg' => 'Disconnect from API 557'				
+				);
+
+				echo json_encode($res);
 			}
 		}
 	}
 
 	public function Flight_Add_Order()
 	{
-		echo "Access Permission need more";
-	}
-	public function Flight_Order()
-	{
-		echo "Access Permission need more";
+		$url = $this->config->item('tiket_api_url_dev');
+		if(empty($this->session->userdata('flight_token_session'))) {
+			$getToken = $url."apiv1/payexpress?method=getToken&secretkey=".$this->config->item('tiket_secret_key')."&output=json";
+			$getTokenResponse = $this->Request_Model->httpGet($getToken);
+			if($getTokenResponse['status'] == 200) {
+
+				$parsetoken = json_decode($getTokenResponse['output'], true);
+				$this->session->set_userdata('flight_token_session', $parsetoken['token']);
+
+			}
+			
+		}
+
+		$validate_token = $this->Token_Model->validateToken($this->session->userdata('flight_token_session'));
+
+		if($validate_token) {
+			// TRUE
+			$param = "order/add/flight";
+			$depatureId = "?flight_id=".$this->input->get('depatureId');
+			$returnId = "&ret_flight_id=".$this->input->get('returnId');
+			$lioncaptcha = "&lioncaptcha=".$this->session->userdata('lion_captcha_captcha');
+			$lionsessionid = "&lionsessionid=".$this->session->userdata('lion_captcha_id');
+			$adult = "&adult=".$this->input->get('adult');
+			$child = "&child=".$this->input->get('child');
+			$infant = "&infant=".$this->input->get('invant');
+			$p = "&conSalutation=Mrs&conFirstName=budianto&conLastName=wijaya&conPhone=%2B6287880182218&conEmailAddress=you_julin@yahoo.com&conOtherPhone=%2B628521342534&firstnamea1=susi&lastnamea1=wijaya&birthdatea1&ida1=1116057107900001&titlea1=Mr&firstnamec1=carreen&lastnamec1=athalia&birthdatec1=2005-02-02&idc1&titlei1=Mr&firstnamei1=wendy&lastnamei1=suprato&birthdatei1=2011-06-29&idi1&parenti1=1&passportnoa1&passportExpiryDatea1&passportissueddatea1&birthdatea1&passportissuinga1&passportnationalitya1&passportnoc1&passportExpiryDatec1&passportissueddatec1&birthdatec1&passportissuingc1&passportnationalityc1&passportnoe1&passportExpiryDatee1&passportissueddatee1&birthdatee1&passportissuinge1&passportnationalitye1&dcheckinbaggagea11&dcheckinbaggagec11&dcheckinbaggagee11&rcheckinbaggagea11&rcheckinbaggagec11&rcheckinbaggagee11";
+			$version = "&v=3";
+			$key = "&token=".$this->session->userdata('flight_token_session');	
+			$format = "&output=json";
+
+			echo $request = $url.$param.$depatureId.$returnId.$lioncaptcha.$lionsessionid.$adult.$child.$infant.$p.$version.$key.$format;
+			// $request = base_url().'files/flight/GetFlightData.json';
+
+			$getResponse = $this->Request_Model->httpGet($request);
+			if($getResponse['status'] == 200) {
+				$checkFlight = json_decode($getResponse['output'], true);
+
+				if($checkFlight['diagnostic']['status'] > 200) {
+
+					$paramOrder = "order";		
+					$keyOrder = "&token=".$this->session->userdata('flight_token_session');
+					$formatOrder = "&output=json";
+
+					$requestOrder = $url.$paramOrder.$keyOrder.$formatOrder;
+					
+					$getResponseOrder = $this->Request_Model->httpGet($requestOrder);
+					if($getResponseOrder['status'] == 200) {
+						$getOrder = json_decode($getResponseOrder['output'], true);
+				}
+			}
+		}
 	}
 
 	public function Delete_Order()

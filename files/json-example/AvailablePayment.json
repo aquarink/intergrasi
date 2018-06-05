@@ -1,26 +1,39 @@
 {
-   "diagnostic":{
-      "status":200,
-      "elapsetime":"37.2329",
-      "memoryusage":"20.06MB",
-      "unix_timestamp":1527739802,
-      "confirm":"success",
-      "lang":"id",
-      "currency":"IDR"
+   "output_type": "json",
+   "diagnostic": {
+      "status": 200,
+      "elapsetime": "0.5625",
+      "memoryusage": "18.74MB",
+      "confirm": "success",
+      "lang": "id",
+      "currency": "IDR"
    },
-   "output_type":"json",
-   "search_queries":{
-      "dep_station":"GDB",
-      "arr_station":"GMR",
-      "date":"2018-06-01",
-      "train_class":"all",
-      "count_adult":1,
-      "count_child":0,
-      "count_infant":0,
-      "dep_city":"Gedebage, Bandung",
-      "arr_city":"Gambir, Jakarta Pusat",
-      "return_date":"2018-06-04"
-   },
-   "login_status":"false",
-   "token":"be32ec83019ffdc35488036cd6b56b6abe80d27d"
+   "available_payment": [
+      {
+         "link": "https://api-sandbox.tiket.com/checkout/checkout_payment/1",
+         "text": "Kartu Kredit",
+         "message": ""
+      },
+      {
+         "link": "https://api-sandbox.tiket.com/checkout/checkout_payment/2",
+         "text": "Transfer Lewat Bank",
+         "message": ""
+      },
+      {
+         "link": "https://api-sandbox.tiket.com/checkout/checkout_payment/3",
+         "text": "KlikBCA",
+         "message": ""
+      },
+      {
+         "link": "https://api-sandbox.tiket.com/checkout/checkout_payment/4",
+         "text": "BCA KlikPay",
+         "message": ""
+      },
+      {
+         "link": "https://api-sandbox.tiket.com/checkout/checkout_payment/20",
+         "text": "COD",
+         "message": ""
+      }
+   ],
+   "token": "62bc0e3bd0c127c5690125a76e11c23c"
 }

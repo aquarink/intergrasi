@@ -1,0 +1,319 @@
+{
+	"diagnostic": {
+		"status": 200,
+		"elapsetime": "0.6156",
+		"memoryusage": "23.62MB",
+		"unix_timestamp": 1528166548,
+		"confirm": "success",
+		"lang": "id",
+		"currency": "IDR"
+	},
+	"output_type": "json",
+	"required": {
+		"separator": {
+			"mandatory": 1,
+			"type": "text",
+			"example": "",
+			"FieldText": "Informasi Kontak yang Dapat Dihubungi",
+			"category": "separator",
+			"disabled": "false"
+		},
+		"conSalutation": {
+			"mandatory": 1,
+			"type": "combobox",
+			"example": "Mr",
+			"FieldText": "Titel",
+			"category": "contact",
+			"resource": [
+				{
+					"id": "Mr",
+					"name": "Tuan"
+				},
+				{
+					"id": "Mrs",
+					"name": "Nyonya"
+				},
+				{
+					"id": "Ms",
+					"name": "Nona"
+				}
+			],
+			"disabled": "false"
+		},
+		"conFirstName": {
+			"mandatory": 1,
+			"type": "textbox",
+			"example": "Jane",
+			"FieldText": "Nama Depan",
+			"category": "contact",
+			"disabled": "false"
+		},
+		"conLastName": {
+			"mandatory": 0,
+			"type": "textbox",
+			"example": "wacob",
+			"FieldText": "Nama Belakang",
+			"category": "contact",
+			"disabled": "false"
+		},
+		"conPhone": {
+			"mandatory": 1,
+			"type": "textbox",
+			"example": "+6285212345678",
+			"FieldText": "No. Telepon",
+			"category": "contact",
+			"disabled": "false"
+		},
+		"conEmailAddress": {
+			"mandatory": 1,
+			"type": "textbox",
+			"example": "example@email.com",
+			"FieldText": "Kontak Email",
+			"category": "contact",
+			"disabled": "false"
+		},
+		"separator_adult1": {
+			"mandatory": 1,
+			"type": "text",
+			"example": "",
+			"FieldText": "Penumpang Dewasa 1",
+			"category": "separator",
+			"disabled": "false"
+		},
+		"titlea1": {
+			"mandatory": 1,
+			"type": "combobox",
+			"example": "Mr",
+			"FieldText": "Titel",
+			"category": "adult1",
+			"resource": [
+				{
+					"id": "Mr",
+					"name": "Tuan"
+				},
+				{
+					"id": "Mrs",
+					"name": "Nyonya"
+				},
+				{
+					"id": "Ms",
+					"name": "Nona"
+				}
+			],
+			"disabled": "false"
+		},
+		"firstnamea1": {
+			"mandatory": 1,
+			"type": "textbox",
+			"example": "Jane",
+			"FieldText": "Nama Depan",
+			"category": "adult1",
+			"disabled": "false"
+		},
+		"lastnamea1": {
+			"mandatory": 0,
+			"type": "textbox",
+			"example": "wacob",
+			"FieldText": "Nama Belakang",
+			"category": "adult1",
+			"disabled": "false"
+		},
+		"birthdatea1": {
+			"mandatory": 1,
+			"type": "datetime",
+			"example": "1990-01-01",
+			"FieldText": "Tanggal Lahir",
+			"category": "adult1",
+			"disabled": "false"
+		},
+		"passportnationalitya1": {
+			"mandatory": 1,
+			"type": "combobox",
+			"example": "ID",
+			"FieldText": "Kewarganegaraan",
+			"category": "adult1",
+			"resource": "https://api.tiket.com/general_api/listCountry",
+			"disabled": "false"
+		},
+		"dcheckinbaggagea11": {
+			"mandatory": 1,
+			"type": "combobox",
+			"example": 0,
+			"FieldText": "Pilih Bagasi Penerbangan Pergi (CGK - DPS)",
+			"category": "adult1",
+			"resource": [
+				{
+					"id": "15",
+					"name": "Bagasi 15 kg (+ IDR 0,00)"
+				},
+				{
+					"id": "20",
+					"name": "Bagasi 20 kg (+ IDR 88.000,00)"
+				},
+				{
+					"id": "25",
+					"name": "Bagasi 25 kg (+ IDR 105.600,00)"
+				},
+				{
+					"id": "30",
+					"name": "Bagasi 30 kg (+ IDR 176.000,00)"
+				},
+				{
+					"id": "40",
+					"name": "Bagasi 40 kg (+ IDR 308.000,00)"
+				}
+			],
+			"disabled": "false"
+		}
+	},
+	"departures": {
+		"flight_id": "576047029",
+		"airlines_name": "AIRASIA",
+		"flight_number": "XT-7518",
+		"flight_date": "2018-06-06",
+		"departure_city": "CGK",
+		"arrival_city": "DPS",
+		"stop": "Langsung",
+		"price_value": "754000.00",
+		"price_adult": "754000.00",
+		"price_child": "0.00",
+		"price_infant": "0.00",
+		"count_adult": "1",
+		"count_child": "0",
+		"count_infant": "0",
+		"timestamp": "2018-06-05 09:39:59",
+		"check_in_baggage": 15,
+		"check_in_baggage_unit": "Kg",
+		"simple_departure_time": "19:30",
+		"simple_arrival_time": "22:20",
+		"long_via": "",
+		"departure_city_name": "Jakarta",
+		"arrival_city_name": "Denpasar",
+		"departure_airport_name": "Soekarno Hatta",
+		"arrival_airport_name": "Ngurah Rai",
+		"full_via": "CGK - DPS (19:30 - 22:20)",
+		"markup_price_string": "",
+		"need_baggage": 1,
+		"departure_flight_date": "2018-06-06 19:30:00",
+		"departure_flight_date_str": "Rabu, 06 Jun 2018",
+		"departure_flight_date_str_short": "Rab, 06 Jun 2018",
+		"arrival_flight_date": "2018-06-06 22:20:00",
+		"arrival_flight_date_str": "Rabu, 06 Jun 2018",
+		"arrival_flight_date_str_short": "Rab, 06 Jun 2018",
+		"duration": "1 j 50 m",
+		"image": "https://cdn01.tiket.photos/images/flight/logo/icon_airasia.png",
+		"flight_infos": {
+			"flight_info": [
+				{
+					"flight_number": "XT-7518",
+					"class": "A",
+					"service_class": "Ekonomi",
+					"operated_by": "",
+					"departure_city": "CGK",
+					"departure_city_name": "Jakarta",
+					"arrival_city": "DPS",
+					"arrival_city_name": "Denpasar",
+					"airlines_name": "AIRASIA",
+					"departure_date_time": "2018-06-06 19:30:00",
+					"string_departure_date": "Rabu, 06 Jun 2018",
+					"string_departure_date_short": "Rab, 06 Jun 2018",
+					"simple_departure_time": "19:30",
+					"has_food": "0",
+					"airport_tax": true,
+					"arrival_date_time": "2018-06-06 22:20:00",
+					"string_arrival_date": "Rabu, 06 Jun 2018",
+					"string_arrival_date_short": "Rab, 06 Jun 2018",
+					"simple_arrival_time": "22:20",
+					"img_src": "https://cdn01.tiket.photos/images/flight/logo/icon_airasia.png",
+					"duration_time": 6600,
+					"duration_hour": "1j",
+					"duration_minute": "50m",
+					"check_in_baggage": 15,
+					"check_in_baggage_unit": "Kg",
+					"terminal": "2F",
+					"transit_duration_hour": 0,
+					"transit_duration_minute": 0,
+					"transit_arrival_text_city": "",
+					"transit_arrival_text_time": ""
+				}
+			]
+		},
+		"sss_key": null
+	},
+	"returns": {
+		"flight_id": "578747594",
+		"airlines_name": "GARUDA",
+		"flight_number": "GA-419",
+		"flight_date": "2018-06-07",
+		"departure_city": "DPS",
+		"arrival_city": "CGK",
+		"stop": "Langsung",
+		"price_value": "710000.00",
+		"price_adult": "710000.00",
+		"price_child": "0.00",
+		"price_infant": "0.00",
+		"count_adult": "1",
+		"count_child": "0",
+		"count_infant": "0",
+		"timestamp": "2018-06-05 09:28:17",
+		"check_in_baggage": 20,
+		"check_in_baggage_unit": "Kg",
+		"simple_departure_time": "17:20",
+		"simple_arrival_time": "18:20",
+		"long_via": "",
+		"departure_city_name": "Denpasar",
+		"arrival_city_name": "Jakarta",
+		"departure_airport_name": "Ngurah Rai",
+		"arrival_airport_name": "Soekarno Hatta",
+		"full_via": "DPS - CGK (17:20 - 18:20)",
+		"markup_price_string": "",
+		"need_baggage": 0,
+		"departure_flight_date": "2018-06-07 17:20:00",
+		"departure_flight_date_str": "Kamis, 07 Jun 2018",
+		"departure_flight_date_str_short": "Kam, 07 Jun 2018",
+		"arrival_flight_date": "2018-06-07 18:20:00",
+		"arrival_flight_date_str": "Kamis, 07 Jun 2018",
+		"arrival_flight_date_str_short": "Kam, 07 Jun 2018",
+		"duration": "2 j 0 m",
+		"image": "https://cdn01.tiket.photos/images/flight/logo/icon_garuda.png",
+		"flight_infos": {
+			"flight_info": [
+				{
+					"flight_number": "GA-419",
+					"class": "S",
+					"service_class": "Ekonomi",
+					"operated_by": "",
+					"departure_city": "DPS",
+					"departure_city_name": "Denpasar",
+					"arrival_city": "CGK",
+					"arrival_city_name": "Jakarta",
+					"airlines_name": "GARUDA",
+					"departure_date_time": "2018-06-07 17:20:00",
+					"string_departure_date": "Kamis, 07 Jun 2018",
+					"string_departure_date_short": "Kam, 07 Jun 2018",
+					"simple_departure_time": "17:20",
+					"has_food": "1",
+					"airport_tax": true,
+					"arrival_date_time": "2018-06-07 18:20:00",
+					"string_arrival_date": "Kamis, 07 Jun 2018",
+					"string_arrival_date_short": "Kam, 07 Jun 2018",
+					"simple_arrival_time": "18:20",
+					"img_src": "https://cdn01.tiket.photos/images/flight/logo/icon_garuda.png",
+					"duration_time": 7200,
+					"duration_hour": "2j",
+					"duration_minute": "",
+					"check_in_baggage": 20,
+					"check_in_baggage_unit": "Kg",
+					"terminal": "",
+					"transit_duration_hour": 0,
+					"transit_duration_minute": 0,
+					"transit_arrival_text_city": "",
+					"transit_arrival_text_time": ""
+				}
+			]
+		},
+		"sss_key": null
+	},
+	"login_status": "false",
+	"token": "ed2a3e266276f0592d6f27e6fabe62555a97233b"
+}

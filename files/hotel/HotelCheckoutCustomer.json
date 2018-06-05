@@ -1,0 +1,22 @@
+{
+	"1": {
+		"id": "1",
+		"type": "Kartu Kredit"
+	},
+	"2": {
+		"id": "2",
+		"type": "Transfer Lewat Bank"
+	},
+	"3": {
+		"id": "3",
+		"type": "KlikBCA"
+	},
+	"4": {
+		"id": "4",
+		"type": "BCA KlikPay"
+	},
+	"20": {
+		"id": "20",
+		"type": "COD"
+	}
+}

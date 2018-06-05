@@ -604,7 +604,7 @@ class HotelAPI extends CI_Controller {
 				$requestPayment = "http://localhost/abunawas/files/json-example/AvailablePayment.json";
 				$getResponsePayment = $this->Request_Model->httpGet($requestPayment);
 				$getPaymentAvailable = json_decode($getResponsePayment['output'], true);
-
+					
 				if($getResponsePayment['status'] == 200) {
 					foreach ($getPaymentAvailable['available_payment'] as $kData => $vData) {
 						$id = str_replace('/', '', substr($vData['link'],-2));
