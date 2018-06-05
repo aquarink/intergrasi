@@ -318,9 +318,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		    		// AJAX
 			    	$.getJSON("<?php echo base_url(); ?>SearchTrain", 
 			    	{
-			    		depature: $('#departTrainCode').val(),
+			    		departure: $('#departTrainCode').val(),
 			    		arrival: $('#arivedTrainCode').val(),
-			    		depatureDate: $('#departDate').val(),
+			    		departureDate: $('#departDate').val(),
 			    		class: $('#class').val(),
 			    		returnDate: returnDate,
 			    		adult: $('#adultPass').val(),
@@ -328,35 +328,35 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			    		invant: $('#invantPass').val()
 			    	}, function (data) {
 
-			    		console.log(data);
-
 			    		var listDep = [];
 			    		var listArr = [];
+			    		if(data.error === 0) {
+				    		$.each(data.datas.departures, function(key, val) {
+				    			listDep.push("<tr>");
+				    			listDep.push("<td><input type=radio value="+$('#departDate').val()+"_"+key+"_"+val.subclass+"_"+$('#departTrainCode').val()+"_"+$('#arivedTrainCode').val()+" name=pilDep id=pilDep></td>");
+				    			listDep.push("<td>"+key+"</td>");
+				    			listDep.push("<td>"+val.trainName+"</td>");
+				    			listDep.push("<td>"+val.priceTotal+"</td>");
+				    			listDep.push("</tr>");
+				    		});
 
-			    		$.each(data.departures, function(key, val) {
-			    			listDep.push("<tr>");
-			    			listDep.push("<td><input type=radio value="+key+" name=pilDep id=pilDep></td>");
-			    			listDep.push("<td>"+val.train_id+"</td>");
-			    			listDep.push("<td>"+val.train_name+"</td>");
-			    			listDep.push("<td>"+val.price_total+"</td>");
-			    			listDep.push("<td>"+key+"</td>");
-			    			listDep.push("</tr>");
-			    		});
+				    		$.each(data.datas.returns, function(key, val) {
+				    			listArr.push("<tr>");
+				    			listArr.push("<td><input type=radio value="+returnDate+"_"+key+"_"+val.subclass+"_"+$('#arivedTrainCode').val()+"_"+$('#departTrainCode').val()+" name=pilArr id=pilArr></td>");
+				    			listArr.push("<td>"+key+"</td>");
+				    			listArr.push("<td>"+val.trainName+"</td>");
+				    			listArr.push("<td>"+val.priceTotal+"</td>");
+				    			listArr.push("</tr>");
+				    		});
 
-			    		$.each(data.returns, function(key, val) {
-			    			listArr.push("<tr>");
-			    			listArr.push("<td><input type=radio value="+key+" name=pilArr id=pilArr></td>");
-			    			listArr.push("<td>"+val.train_id+"</td>");
-			    			listArr.push("<td>"+val.train_name+"</td>");
-			    			listArr.push("<td>"+val.price_total+"</td>");
-			    			listArr.push("<td>"+key+"</td>");
-			    			listArr.push("</tr>");
-			    		});
+				    		$("<tbody/>", {html: listDep.join("")}).appendTo("#depatureData");
+				    		$("<tbody/>", {html: listArr.join("")}).appendTo("#arrivalData");
 
-			    		$("<tbody/>", {html: listDep.join("")}).appendTo("#depatureData");
-			    		$("<tbody/>", {html: listArr.join("")}).appendTo("#arrivalData");
-
-			    		$('#popup').modal('hide');
+				    		$('#popup').modal('hide');
+				    	} else {
+			    			alert('Data Tidak Ditemukan');
+			    			window.location.reload(true);
+			    		}
 
 			    	});
 			    } else {
@@ -366,8 +366,51 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 			$("#ChooseTrain").click(function() {
 
-				$('input[name=pilDep]:checked').val();
-				$('input[name=pilArr]:checked').val();
+				var retType = $('#returnFlight').val();
+				if(retType === 1 || retType === '1') {
+		    		// return
+		    		var returnDate = $('#arivedDate').val();
+		    	} else {
+		    		// one way
+		    		var returnDate = '';
+		    	}
+
+				var dep = $('input[name=pilDep]:checked').val();
+				var arr = $('input[name=pilArr]:checked').val();
+
+				if(dep !== '' && arr !== '') {
+
+					$('#popup').modal({backdrop: 'static', keyboard: false});
+
+					// AJAX
+			    	$.getJSON("<?php echo base_url(); ?>GetFlightData", 
+			    	{
+			    		depatureId: dep,
+			    		depatureDate: $('#departDate').val(),
+			    		returnId: arr,
+			    		returnDate: returnDate
+			    	}, function (data) {
+
+			    		if(data.error == 0) {
+			    			// AJAX
+					    	$.getJSON("<?php echo base_url(); ?>FlightAddOrder", 
+					    	{
+					    		depatureId: dep,
+					    		returnId: arr,
+					    		adult: $('#adultPass').val(),
+					    		child: $('#childPass').val(),
+					    		invant: $('#invantPass').val()
+					    	}, function (res) {
+					    		$('#dataPenumpang').val(res);
+					    	});
+			    		}
+
+			    		$('#popup').modal('hide');
+
+			    	});
+			    } else {
+			    	alert('PILIH PENERBANGAN');
+			    }
 			});
 
 		});

@@ -326,7 +326,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			    		var listDep = [];
 			    		var listArr = [];
 
-			    		if(data.error === 0) {
+			    		if(data.error === 0) { 
 			    			$.each(data.datas.departures, function(key, val) {
 				    			listDep.push("<tr>");
 				    			listDep.push("<td><input type=radio value="+val.flight_id+" name=pilDep id=pilDep></td>");

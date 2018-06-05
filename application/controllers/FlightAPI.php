@@ -90,7 +90,7 @@ class FlightAPI extends CI_Controller {
 									'datas' => 0,
 									'msg' => 'Write file failed 91'				
 								);
-							}
+							} 
 						} else {
 							$res = array(
 								'error' => 1,
