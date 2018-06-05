@@ -210,7 +210,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 							<br>
 
-							<a id="ChooseFlight" class="btn btn-success">Choose Flight</a>
+							<!-- <a id="ChooseFlight" class="btn btn-success">Choose Flight</a> -->
+						</div>
+
+						<div class="col-md-12">
+							<div class="col-md-6">
+								<h3>Simulasi Input Data Penumpang</h3>
+								<textarea class="form-control" id="dataPenumpang">&conSalutation=Mrs&conFirstName=budianto&conLastName=wijaya&conPhone=%2B6287880182218&conEmailAddress=you_julin@yahoo.com&conOtherPhone=%2B628521342534&firstnamea1=susi&lastnamea1=wijaya&birthdatea1=1990-02-09&ida1=&titlea1=Mr&firstnamec1=carreen&lastnamec1=athalia&birthdatec1=2005-02-02&idc1&titlei1=Mr&firstnamei1=wendy&lastnamei1=suprato&birthdatei1=2011-06-29&idi1&parenti1=&passportnoa1&passportExpiryDatea1=2020-09-02&passportissueddatea1=2015-0902&passportissuinga1&passportnationalitya1=id&passportnoc1&passportExpiryDatec1&passportissueddatec1&birthdatec1&passportissuingc1&passportnationalityc1&passportnoe1&passportExpiryDatee1&passportissueddatee1&birthdatee1&passportissuinge1&passportnationalitye1&dcheckinbaggagea11&dcheckinbaggagec11&dcheckinbaggagee11&rcheckinbaggagea11&rcheckinbaggagec11&rcheckinbaggagee11</textarea>
+								<a id="OrderFlight" class="btn btn-warning">Order Flight</a>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -356,7 +364,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			    }
 			});
 
-			$("#ChooseFlight").click(function() {
+			$("#OrderFlight").click(function() {
 
 				var retType = $('#returnFlight').val();
 				if(retType === 1 || retType === '1') {
@@ -370,51 +378,88 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				var dep = $('input[name=pilDep]:checked').val();
 				var arr = $('input[name=pilArr]:checked').val();
 
-				$('#popup').modal({backdrop: 'static', keyboard: false});
+				if(dep !== '' && arr !== '') {
 
-				// AJAX
-		    	$.getJSON("<?php echo base_url(); ?>FlightAddOrder", 
-		    	{
-		    		depatureId: dep,
-		    		returnId: arr,
-		    		adult: $('#adultPass').val(),
-		    		child: $('#childPass').val(),
-		    		invant: $('#invantPass').val()
-		    	}, function (data) {
+					$('#popup').modal({backdrop: 'static', keyboard: false});
 
-		    		console.log(data);
+					// AJAX
+			    	$.getJSON("<?php echo base_url(); ?>GetFlightData", 
+			    	{
+			    		depatureId: dep,
+			    		depatureDate: $('#departDate').val(),
+			    		returnId: arr,
+			    		returnDate: returnDate
+			    	}, function (data) {
 
-		    		// var listDep = [];
-		    		// var listArr = [];
+			    		if(data.error == 0) {
+			    			// AJAX
+					    	$.getJSON("<?php echo base_url(); ?>FlightAddOrder", 
+					    	{
+					    		depatureId: dep,
+					    		returnId: arr,
+					    		adult: $('#adultPass').val(),
+					    		child: $('#childPass').val(),
+					    		invant: $('#invantPass').val()
+					    	}, function (res) {
+					    		$('#dataPenumpang').val(res);
+					    	});
+			    		}
 
-		    		// if(data.error === 0) {
-		    		// 	$.each(data.datas.departures, function(key, val) {
-			    	// 		listDep.push("<tr>");
-			    	// 		listDep.push("<td><input type=radio value="+val.flight_id+" name=pilDep id=pilDep></td>");
-			    	// 		listDep.push("<td>"+val.flight_id+"</td>");
-			    	// 		listDep.push("<td>"+val.airlines_name+"</td>");
-			    	// 		listDep.push("<td>"+val.price.price_value+"</td>");
-			    	// 		listDep.push("<td>"+val.flight_number+"</td>");
-			    	// 		listDep.push("</tr>");
-			    	// 	});
+			    		$('#popup').modal('hide');
 
-			    	// 	$.each(data.datas.returns, function(key, val) {
-			    	// 		listArr.push("<tr>");
-			    	// 		listArr.push("<td><input type=radio value="+val.flight_id+" name=pilArr id=pilArr></td>");
-			    	// 		listArr.push("<td>"+val.flight_id+"</td>");
-			    	// 		listArr.push("<td>"+val.airlines_name+"</td>");
-			    	// 		listArr.push("<td>"+val.price.price_value+"</td>");
-			    	// 		listArr.push("<td>"+val.flight_number+"</td>");
-			    	// 		listArr.push("</tr>");
-			    	// 	});
-		    		// } else {
-		    		// 	alert('Data Tidak Ditemukan');
-		    		// 	window.location.reload(true);
-		    		// }
+			    	});
+			    } else {
+			    	alert('PILIH PENERBANGAN');
+			    }
+			});
 
-		    		$('#popup').modal('hide');
+			$("#OrderFlightsss").click(function() {
 
-		    	});
+				var retType = $('#returnFlight').val();
+				if(retType === 1 || retType === '1') {
+		    		// return
+		    		var returnDate = $('#arivedDate').val();
+		    	} else {
+		    		// one way
+		    		var returnDate = '';
+		    	}
+
+				var dep = $('input[name=pilDep]:checked').val();
+				var arr = $('input[name=pilArr]:checked').val();
+
+				var order = $('#dataPenumpang').val();
+
+				if(order !== '') {
+
+					$('#popup').modal({backdrop: 'static', keyboard: false});
+
+					// AJAX
+			    	$.getJSON("<?php echo base_url(); ?>GetFlightData", 
+			    	{
+			    		depatureId: dep,
+			    		depatureDate: $('#departDate').val(),
+			    		returnId: arr,
+			    		returnDate: returnDate
+			    	}, function (data) {
+
+			    		if(data.error == 0) {
+			    			// AJAX
+					    	$.getJSON("<?php echo base_url(); ?>FlightAddOrder", 
+					    	{
+					    		depatureId: dep,
+					    		returnId: arr,
+					    		adult: $('#adultPass').val(),
+					    		child: $('#childPass').val(),
+					    		invant: $('#invantPass').val()
+					    	}, function (res) {
+					    		$('#dataPenumpang').val(res);
+					    	});
+			    		}
+
+			    		$('#popup').modal('hide');
+
+			    	});
+			    }
 			});
 
 		});

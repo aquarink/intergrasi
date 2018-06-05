@@ -360,7 +360,6 @@ class HotelAPI extends CI_Controller {
 						// ORDER DATA
 						foreach ($getOrder['myorder']['data'] as $kData => $vData) {
 							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['expire'] = $vData['expire'];
-							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['expire'] = $vData['expire'];
 							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['orderDetailId'] = $vData['order_detail_id'];
 							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['orderExpireDatetime'] = $vData['order_expire_datetime'];
 							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['orderType'] = $vData['order_type'];
