@@ -19,7 +19,7 @@ class HotelAPI extends CI_Controller {
 		$this->load->model('Request_Model');
 		$this->load->model('Token_Model');
 
-		$this->load->model('Hotel_Model');
+		$this->load->model('Hotel_Model'); 
 	}
 
 	public function index()
@@ -454,8 +454,8 @@ class HotelAPI extends CI_Controller {
 		if($validate_token) {
 			// TRUE
 			$urlDelete = $this->input->get('delete');		
-			// $key = "&token=".$this->session->userdata('hotel_token_session');
-			$key = "&token=624cb009761ecadbd0042685a4a9d491f475b7df";
+			$key = "&token=".$this->session->userdata('hotel_token_session');
+			// $key = "&token=624cb009761ecadbd0042685a4a9d491f475b7df";
 			$format = "&output=json";
 
 			$request = $urlDelete.$key.$format;

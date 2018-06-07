@@ -603,7 +603,7 @@ class FlightAPI extends CI_Controller {
 				if($checkFlight['diagnostic']['status'] > 200) {
 
 					$paramOrder = "order";		
-					$keyOrder = "&token=".$this->session->userdata('flight_token_session');
+					$keyOrder = "?token=".$this->session->userdata('flight_token_session');
 					$formatOrder = "&output=json";
 
 					$requestOrder = $url.$paramOrder.$keyOrder.$formatOrder;
@@ -611,8 +611,6 @@ class FlightAPI extends CI_Controller {
 					$getResponseOrder = $this->Request_Model->httpGet($requestOrder);
 					if($getResponseOrder['status'] == 200) {
 						$getOrder = json_decode($getResponseOrder['output'], true);
-
-						print_r($getResponseOrder); exit();
 
 						// LIST
 						$orderData[$getOrder['myorder']['order_id']]['orderId'] = $getOrder['myorder']['order_id'];
@@ -667,9 +665,9 @@ class FlightAPI extends CI_Controller {
 						$orderData[$getOrder['myorder']['order_id']]['checkoutUrl'] = $getOrder['checkout'];
 
 						$data = array(
-							'error' => $getDetail['diagnostic']['status'],
+							'error' => $getResponse['status'],
 							'msg' => 'Success get data',
-							'data' => $orderData
+							'datas' => $orderData
 						);
 
 						echo json_encode($data);
@@ -677,16 +675,16 @@ class FlightAPI extends CI_Controller {
 						$data = array(
 							'error' => $getResponseOrder['status'],
 							'msg' => 'Error '.$getResponseOrder['status'].' disconnect from API 677',
-							'data' => 0
+							'datas' => 0
 						);
 
 						echo json_encode($data);
 					}
 				} else {
 					$data = array(
-						'error' => $checkFlight['diagnostic']['status'],
-						'msg' => 'Error '.$checkFlight['diagnostic']['status'].' disconnect from API 686',
-						'data' => 0
+						'error' => $checkFlight['status'],
+						'msg' => 'Error '.$checkFlight['status'].' disconnect from API 686',
+						'datas' => 0
 					);
 
 					echo json_encode($data);
@@ -695,7 +693,7 @@ class FlightAPI extends CI_Controller {
 				$data = array(
 					'error' => $getResponse['status'],
 					'msg' => 'Error '.$getResponse['status'].' disconnect from API 695',
-					'data' => 0
+					'datas' => 0
 				);
 
 				echo json_encode($data);
@@ -723,8 +721,8 @@ class FlightAPI extends CI_Controller {
 		if($validate_token) {
 			// TRUE
 			$urlDelete = $this->input->get('delete');		
-			// $key = "&token=".$this->session->userdata('flight_token_session');
-			$key = "&token=624cb009761ecadbd0042685a4a9d491f475b7df";
+			$key = "&token=".$this->session->userdata('flight_token_session');
+			// $key = "&token=624cb009761ecadbd0042685a4a9d491f475b7df";
 			$format = "&output=json";
 
 			$request = $urlDelete.$key.$format;
@@ -762,7 +760,59 @@ class FlightAPI extends CI_Controller {
 	}
 	public function Flight_Checkout_Page_Request()
 	{
-		echo "Access Permission need more";
+		$url = $this->config->item('tiket_api_url_dev');
+		if(empty($this->session->userdata('flight_token_session'))) {
+			$getToken = $url."apiv1/payexpress?method=getToken&secretkey=".$this->config->item('tiket_secret_key')."&output=json";
+			$getTokenResponse = $this->Request_Model->httpGet($getToken);
+			if($getTokenResponse['status'] == 200) {
+
+				$parsetoken = json_decode($getTokenResponse['output'], true);
+				$this->session->set_userdata('flight_token_session', $parsetoken['token']);
+
+			}
+			
+		}
+
+		$validate_token = $this->Token_Model->validateToken($this->session->userdata('flight_token_session'));
+
+		if($validate_token) {
+			// TRUE
+			$urlCheckout = $this->input->get('checkout');		
+			$key = "&token=".$this->session->userdata('flight_token_session');
+			// $key = "&token=624cb009761ecadbd0042685a4a9d491f475b7df";
+			$format = "&output=json";
+
+			$request = $urlCheckout.$key.$format;
+
+			$getResponse = $this->Request_Model->httpGet($request);
+			if($getResponse['status'] == 200) {
+				$checkoutCoustumer = json_decode($getResponse['output'], true);
+
+				if($checkoutCoustumer['diagnostic']['status'] == 200) {
+					$data = array(
+						'error' => 200,
+						'msg' => '200',
+						'data' => 0
+					);
+				} else {
+					$data = array(
+						'error' => $checkoutCoustumer['diagnostic']['status'],
+						'msg' => 'Error '.$checkoutCoustumer['diagnostic']['status'],
+						'data' => 0
+					);
+				}
+
+				echo json_encode($data);
+			} else {
+				$data = array(
+					'error' => $getResponse['status'],
+					'msg' => 'Error '.$getResponse['status'],
+					'data' => 0
+				);
+
+				echo json_encode($data);
+			}
+		}
 	}
 	public function Flight_Checkout_Login()
 	{

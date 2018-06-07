@@ -72,7 +72,7 @@ $route['GetLionCaptcha'] = 'FlightAPI/Get_Lion_Captcha';
 $route['GetFlightData'] = 'FlightAPI/Get_Flight_Data';
 $route['FlightAddOrder'] = 'FlightAPI/Flight_Add_Order';
 $route['FlightOrder'] = 'FlightAPI/Flight_Order';
-$route['DeleteOrder'] = 'FlightAPI/Delete_Order';
+$route['FlightDeleteOrder'] = 'FlightAPI/Flight_Delete_Order';
 $route['FlightCheckoutPageRequest'] = 'FlightAPI/Flight_Checkout_Page_Request';
 $route['FlightCheckoutLogin'] = 'FlightAPI/Flight_Checkout_Login';
 $route['FlightCheckoutCostumer'] = 'FlightAPI/Flight_Checkout_Costumer';
@@ -80,7 +80,7 @@ $route['FlightAvailablePayment'] = 'FlightAPI/Flight_Available_Payment';
 $route['FlightCheckoutPayment'] = 'FlightAPI/Flight_Checkout_Payment';
 
 // Hotel API
-$route['SearchHotel'] = 'HotelAPI/Search_Hotel';
+$route['SearchHotel'] = 'HotelAPI/Search_Hotel'; 
 $route['InsertProvince'] = 'HotelAPI/Insert_Province';
 $route['SearchAutocomplete'] = 'HotelAPI/Search_Autocomplete';
 $route['SearchHotelPromo'] = 'HotelAPI/Search_Hotel_Promo';

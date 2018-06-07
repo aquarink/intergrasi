@@ -81,7 +81,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							<form class="form-group">
 								<div class="input-group">
 									<span class="input-group-addon"><i class="glyphicon glyphicon-map-marker"></i></span>
-									<input type="text" class="form-control" id="departAirport" name="departAirport" placeholder="From City">
+									<input type="text" class="form-control" id="departAirport" name="departAirport" placeholder="From : Airport Name or Alias">
 									<input type="hidden" name="departAirportCode" id="departAirportCode">
 								</div>
 
@@ -89,7 +89,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 								<div class="input-group">
 									<span class="input-group-addon"><i class="glyphicon glyphicon-map-marker"></i></span>
-									<input type="text" class="form-control" id="arivedAirport" name="arivedAirport" placeholder="To City">
+									<input type="text" class="form-control" id="arivedAirport" name="arivedAirport" placeholder="To : Airport Name or Alias">
 									<input type="hidden" name="arivedAirportCode" id="arivedAirportCode">
 								</div>
 
@@ -219,6 +219,43 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 								<textarea class="form-control" id="dataPenumpang">&conSalutation=Mrs&conFirstName=budianto&conLastName=wijaya&conPhone=%2B6287880182218&conEmailAddress=you_julin@yahoo.com&conOtherPhone=%2B628521342534&firstnamea1=susi&lastnamea1=wijaya&birthdatea1=1990-02-09&ida1=&titlea1=Mr&firstnamec1=carreen&lastnamec1=athalia&birthdatec1=2005-02-02&idc1&titlei1=Mr&firstnamei1=wendy&lastnamei1=suprato&birthdatei1=2011-06-29&idi1&parenti1=&passportnoa1&passportExpiryDatea1=2020-09-02&passportissueddatea1=2015-0902&passportissuinga1&passportnationalitya1=id&passportnoc1&passportExpiryDatec1&passportissueddatec1&birthdatec1&passportissuingc1&passportnationalityc1&passportnoe1&passportExpiryDatee1&passportissueddatee1&birthdatee1&passportissuinge1&passportnationalitye1&dcheckinbaggagea11&dcheckinbaggagec11&dcheckinbaggagee11&rcheckinbaggagea11&rcheckinbaggagec11&rcheckinbaggagee11</textarea>
 								<a id="OrderFlight" class="btn btn-warning">Order Flight</a>
 							</div>
+						</div>
+
+						<div class="col-md-12">
+							<h3>Hotel Detail</h3>
+							<table id="orderDetail" class="table table-bordered table-hover table-striped">
+								<thead>
+									<tr>
+										<th>Hapus Order</th>
+										<th>orderDetailId</th>
+										<th>orderExpireDatetime</th>
+										<th>orderName</th>
+										<th>orderNameDetail</th>
+										<th>airlinesName</th>
+										<th>flightNumber</th>
+										<th>priceAdult</th>
+										<th>priceChild Date</th>
+										<th>priceInfant</th>
+										<th>departureAirport</th>
+										<th>passengers</th>
+										<th>Total Price</th>
+										<th>breakdownPrice</th>
+									</tr>
+								</thead>
+
+								<tbody>
+
+								</tbody>
+							</table>
+
+							<br>
+
+							<h3>Checkout</h3>
+							<table id="hotelCheckout" class="table table-bordered table-hover table-striped">
+								<tbody>
+
+								</tbody>
+							</table>
 						</div>
 					</div>
 				</div>
@@ -402,11 +439,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					    		invant: $('#invantPass').val()
 					    	}, function (res) {
 					    		$('#dataPenumpang').val(res);
+
+					    		$('#popup').modal('hide');
 					    	});
 			    		}
-
-			    		$('#popup').modal('hide');
-
 			    	});
 			    } else {
 			    	alert('PILIH PENERBANGAN');
@@ -453,11 +489,45 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					    		invant: $('#invantPass').val()
 					    	}, function (res) {
 					    		$('#dataPenumpang').val(res);
+
+					    		var listDep = [];
+
+								$.each(res.datas, function(k, v) {
+									$.each(v.list, function(ky, vl) {
+										listDep.push("<tr>");
+										// listDep.push("<td><a href='<?php echo base_url(); ?>HotelDeleteOrder?delete="+vl.deleteOrder+"'>Delete</a></td>");
+										listDep.push("<td><a onClick=deleteOrder('"+vl.deleteOrder+"')>Delete</a></td>");
+										listDep.push("<td>"+vl.orderDetailId+"</td>");
+										listDep.push("<td>"+vl.orderExpireDatetime+"</td>");
+										listDep.push("<td>"+vl.orderName+"</td>");
+										listDep.push("<td>"+vl.orderNameDetail+"</td>");
+										listDep.push("<td>"+vl.airlinesName+"</td>");
+										listDep.push("<td>"+vl.flightNumber+"</td>");
+										listDep.push("<td>"+vl.priceAdult+"</td>");
+										listDep.push("<td>"+vl.priceChild+"</td>");
+										listDep.push("<td>"+vl.priceInfant+"</td>");
+										listDep.push("<td>"+vl.departureAirport+"</td>");
+										listDep.push("<td>"+vl.arrivalAirport+"</td>");
+
+										$.each(vl.passengers, function(key, val) {
+											listDep.push("<td>"+val+"</td>");
+										});
+
+										listDep.push("<td>"+vl.totalPrice+"</td>");
+
+										$.each(vl.breakdownPrice, function(key, val) {
+											listDep.push("<td>"+val+"</td>");
+										});
+
+										listDep.push("</tr>");
+									});
+								});
+
+								$("<tbody/>", {html: listDep.join("")}).appendTo("#orderDetail");
+
+					    		$('#popup').modal('hide');
 					    	});
 			    		}
-
-			    		$('#popup').modal('hide');
-
 			    	});
 			    }
 			});

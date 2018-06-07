@@ -22,7 +22,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
 
-  <style>                                                                          
+  <style>                                                                     
   .box{
   	width: 500px;
   	margin: auto;

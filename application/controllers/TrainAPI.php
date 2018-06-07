@@ -23,7 +23,7 @@ class TrainAPI extends CI_Controller {
 	}
 
 	public function index()
-	{
+	{ 
 		echo "Forbhident access : 404";
 	}
 
@@ -247,11 +247,6 @@ class TrainAPI extends CI_Controller {
 			echo json_encode($find);
 		}
 	}
-	public function Get_Train_Seat_Map()
-	{
-
-	}
-
 	public function Train_Add_Order()
 	{
 		
@@ -260,7 +255,10 @@ class TrainAPI extends CI_Controller {
 	{
 
 	}
+	public function Get_Train_Seat_Map()
+	{
 
+	}
 	public function Train_Checkout_Page_Request()
 	{
 		
@@ -269,7 +267,6 @@ class TrainAPI extends CI_Controller {
 	{
 
 	}
-
 	public function Train_Available_Payment()
 	{
 		
@@ -278,7 +275,6 @@ class TrainAPI extends CI_Controller {
 	{
 
 	}
-
 	public function Train_Register()
 	{
 		
@@ -287,7 +283,6 @@ class TrainAPI extends CI_Controller {
 	{
 
 	}
-
 	public function Train_Change_TrainSeat()
 	{
 		
