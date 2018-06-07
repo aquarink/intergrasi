@@ -333,7 +333,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			    		if(data.error === 0) {
 				    		$.each(data.datas.departures, function(key, val) {
 				    			listDep.push("<tr>");
-				    			listDep.push("<td><input type=radio value="+$('#departDate').val()+"_"+key+"_"+val.subclass+"_"+$('#departTrainCode').val()+"_"+$('#arivedTrainCode').val()+" name=pilDep id=pilDep></td>");
+				    			listDep.push("<td><input type=radio value="+key+"_"+val.subclass+" name=pilDep id=pilDep></td>");
 				    			listDep.push("<td>"+key+"</td>");
 				    			listDep.push("<td>"+val.trainName+"</td>");
 				    			listDep.push("<td>"+val.priceTotal+"</td>");
@@ -342,7 +342,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 				    		$.each(data.datas.returns, function(key, val) {
 				    			listArr.push("<tr>");
-				    			listArr.push("<td><input type=radio value="+returnDate+"_"+key+"_"+val.subclass+"_"+$('#arivedTrainCode').val()+"_"+$('#departTrainCode').val()+" name=pilArr id=pilArr></td>");
+				    			listArr.push("<td><input type=radio value="+key+"_"+val.subclass+" name=pilArr id=pilArr></td>");
 				    			listArr.push("<td>"+key+"</td>");
 				    			listArr.push("<td>"+val.trainName+"</td>");
 				    			listArr.push("<td>"+val.priceTotal+"</td>");
@@ -382,13 +382,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 					$('#popup').modal({backdrop: 'static', keyboard: false});
 
+					var explDep = dep.split("_");
+					var explArr = arr.split("_");
+
 					// AJAX
-			    	$.getJSON("<?php echo base_url(); ?>GetFlightData", 
+			    	$.getJSON("<?php echo base_url(); ?>TrainAddOrder", 
 			    	{
-			    		depatureId: dep,
-			    		depatureDate: $('#departDate').val(),
-			    		returnId: arr,
-			    		returnDate: returnDate
+			    		departureCode: $('#departTrainCode').val(),
+			    		arrivalCode: $('#arivedTrainCode').val(),
+			    		departureDate: $('#departDate').val(),
+			    		returnDate: returnDate,
+			    		adult: $('#adultPass').val(),
+			    		child: $('#childPass').val(),
+			    		invant: $('#invantPass').val(),
+			    		depTrainId: explDep[0],
+			    		depSubclass: explDep[1],
+			    		retTrainId: explArr[0],
+			    		retSubclass: explArr[1]
 			    	}, function (data) {
 
 			    		if(data.error == 0) {

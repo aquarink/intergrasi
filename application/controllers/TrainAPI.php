@@ -249,15 +249,249 @@ class TrainAPI extends CI_Controller {
 	}
 	public function Train_Add_Order()
 	{
-		
-	}
-	public function Train_Order()
-	{
+		$url = $this->config->item('tiket_api_url_dev');
+		if(empty($this->session->userdata('train_token_session'))) {
+			$getToken = $url."apiv1/payexpress?method=getToken&secretkey=".$this->config->item('tiket_secret_key')."&output=json";
+			$getTokenResponse = $this->Request_Model->httpGet($getToken);
+			if($getTokenResponse['status'] == 200) {
 
+				$parsetoken = json_decode($getTokenResponse['output'], true);
+				$this->session->set_userdata('train_token_session', $parsetoken['token']);
+
+			}
+			
+		}
+
+		$validate_token = $this->Token_Model->validateToken($this->session->userdata('train_token_session'));
+
+		if($validate_token) { 
+			// TRUE
+			$param = "order/add/train";
+			$departure = "?d=".$this->input->get('departureCode');
+			$arrival = "&a=".$this->input->get('arrivalCode');
+			$dateGo = "&date=".$this->input->get('departureDate');
+			$dateReturn = "&ret_date=".$this->input->get('returnDate');
+			$adult = "&adult=".$this->input->get('adult');
+			$child = "&child=".$this->input->get('child');
+			$infant = "&infant=".$this->input->get('invant');
+
+			$additional = "&conSalutation=Mr&conFirstName=b&conLastName=bl&conPhone=0878121&conEmailAddress=be@scom&nameAdult1=a&IdCardAdult1=111&noHpAdult1=%2B62878222&salutationAdult1=Mr&birthDateAdult1=1990-02-02&nameChild1&salutationChild1&birthDateChild1&salutationInfant1&nameInfant1&birthDateInfant1";
+
+			$trainId = "&train_id=".$this->input->get('depTrainId');
+			$subclass = "&subclass=".$this->input->get('depSubclass');	
+			$retTrainId = "&train_id_ret=".$this->input->get('retTrainId');
+			$retSubclass = "&subclass_ret=".$this->input->get('retSubclass');
+			$key = "&token=".$this->session->userdata('train_token_session');
+			$format = "&output=json";
+
+			$request = $url.$param.$departure.$arrival.$dateGo.$dateReturn.$adult.$child.$infant.$additional.$trainId.$subclass.$retTrainId.$retSubclass.$key.$format;
+
+			$getResponse = $this->Request_Model->httpGet($request);
+			if($getResponse['status'] == 200) {
+				$getDetail = json_decode($getResponse['output'], true);
+					
+				if($getDetail['diagnostic']['status'] > 200) {
+					// SUCCESS
+					// Hotel_Order API
+					$paramOrder = "order";		
+					$keyOrder = "&token=".$this->session->userdata('train_token_session');
+					$formatOrder = "&output=json";
+
+					$requestOrder = $url.$paramOrder.$keyOrder.$formatOrder;
+					// $requestOrder = "https://api-sandbox.tiket.com/order?token=624cb009761ecadbd0042685a4a9d491f475b7df&output=json";
+
+					$getResponseOrder = $this->Request_Model->httpGet($requestOrder);
+					if($getResponseOrder['status'] == 200) {
+						$getOrder = json_decode($getResponseOrder['output'], true);
+
+						// LIST
+						$orderData[$getOrder['myorder']['order_id']]['orderId'] = $getOrder['myorder']['order_id'];
+
+						// ORDER DATA
+						foreach ($getOrder['myorder']['data'] as $kData => $vData) {
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['expire'] = $vData['expire'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['orderDetailId'] = $vData['order_detail_id'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['orderExpireDatetime'] = $vData['order_expire_datetime'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['orderType'] = $vData['order_type'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['customerPrice'] = $vData['customer_price'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['customerCurrency'] = $vData['customer_currency'];
+
+							// DETAIL
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['arrivalDatetime'] = $vData['detail']['arrival_datetime'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['departureDatetime'] = $vData['detail']['departure_datetime'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['countAdult'] = $vData['detail']['count_adult'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['countChild'] = $vData['detail']['count_child'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['bookCode'] = $vData['detail']['book_code'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['trainSubclass'] = $vData['detail']['train_subclass'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['tiketSeating'] = $vData['detail']['tiket_seating'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['numCode'] = $vData['detail']['num_code'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['trainFrom'] = $vData['detail']['train_from'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['trainTo'] = $vData['detail']['train_to'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['trainName'] = $vData['detail']['train_name'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['subclassType'] = $vData['detail']['subclass_type'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['className'] = $vData['detail']['class_name'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['fromStation'] = $vData['detail']['train_from_station'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['toStation'] = $vData['detail']['train_to_station'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['price'] = $vData['detail']['price'];
+
+							// TAX
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['orderPhoto'] = $vData['order_photo'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['taxCharge'] = $vData['tax_and_charge'];
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['subtotalCharge'] = $vData['subtotal_and_charge'];
+
+							// ORDERS MANAGE
+							$orderData[$getOrder['myorder']['order_id']]['list'][$kData]['deleteOrder'] = $vData['delete_uri'];
+						}
+
+						// TOTAL
+						$orderData[$getOrder['myorder']['order_id']]['total'] = $getOrder['myorder']['total'];
+						$orderData[$getOrder['myorder']['order_id']]['totalTax'] = $getOrder['myorder']['total_tax'];
+						$orderData[$getOrder['myorder']['order_id']]['totalWithoutTax'] = $getOrder['myorder']['total_without_tax'];
+						$orderData[$getOrder['myorder']['order_id']]['countInstallment'] = $getOrder['myorder']['count_installment'];
+
+						// CHECKOUT
+						$orderData[$getOrder['myorder']['order_id']]['checkoutUrl'] = $getOrder['checkout'];
+
+						$data = array(
+							'error' => $getDetail['diagnostic']['status'],
+							'msg' => 'Success get data',
+							'datas' => $orderData
+						);
+
+						echo json_encode($data);
+					} else {
+						$data = array(
+							'error' => 500,
+							'msg' => 'Error 500',
+							'datas' => 0
+						);
+
+						echo json_encode($data);
+					}
+				} elseif($getDetail['diagnostic']['status'] == 211) {
+					$data = array(
+						'error' => $getDetail['diagnostic']['status'],
+						'msg' => $getDetail['diagnostic']['error_msgs'],
+						'datas' => 0
+					);
+
+					echo json_encode($data);
+				}
+				
+			} else {
+				$data = array(
+					'error' => 500,
+					'msg' => 'Error 500',
+					'datas' => 0
+				);
+
+				echo json_encode($data);
+			}
+		}
 	}
+
 	public function Get_Train_Seat_Map()
 	{
+		$url = $this->config->item('tiket_api_url_dev');
+		if(empty($this->session->userdata('train_token_session'))) {
+			$getToken = $url."apiv1/payexpress?method=getToken&secretkey=".$this->config->item('tiket_secret_key')."&output=json";
+			$getTokenResponse = $this->Request_Model->httpGet($getToken);
+			if($getTokenResponse['status'] == 200) {
 
+				$parsetoken = json_decode($getTokenResponse['output'], true);
+				$this->session->set_userdata('train_token_session', $parsetoken['token']);
+
+			}
+			
+		}
+
+		$validate_token = $this->Token_Model->validateToken($this->session->userdata('train_token_session'));
+
+		if($validate_token) { 
+			// TRUE
+			$param = "general_api/get_train_seat_map";
+			$date = "?date=".$this->input->get('date');
+			$trainId = "&train_id=".$this->input->get('trainId');
+			$subclass = "&subclass=".$this->input->get('subclass');
+			$from = "&org=".$this->input->get('departureCode');
+			$to = "&dest=".$this->input->get('arrivalCode');
+			$key = "&token=".$this->session->userdata('train_token_session');
+			$format = "&output=json";
+
+			$request = $url.$param.$date.$trainId.$subclass.$from.$to.$key.$format;
+
+			$getResponse = $this->Request_Model->httpGet($request);
+			if($getResponse['status'] == 200) {
+				$getSeat = json_decode($getResponse['output'], true);
+
+				$data = array(
+					'error' => 0,
+					'msg' => 'Get seat data success',
+					'datas' => $getSeat['result'];
+				);
+
+				echo json_encode($data);
+			} else {
+				$data = array(
+					'error' => 500,
+					'msg' => 'Error 500',
+					'datas' => 0
+				);
+
+				echo json_encode($data);
+			}
+		}
+	}
+	public function Train_Change_TrainSeat()
+	{
+		$url = $this->config->item('tiket_api_url_dev');
+		if(empty($this->session->userdata('train_token_session'))) {
+			$getToken = $url."apiv1/payexpress?method=getToken&secretkey=".$this->config->item('tiket_secret_key')."&output=json";
+			$getTokenResponse = $this->Request_Model->httpGet($getToken);
+			if($getTokenResponse['status'] == 200) {
+
+				$parsetoken = json_decode($getTokenResponse['output'], true);
+				$this->session->set_userdata('train_token_session', $parsetoken['token']);
+
+			}
+			
+		}
+
+		$validate_token = $this->Token_Model->validateToken($this->session->userdata('train_token_session'));
+
+		if($validate_token) { 
+			// TRUE
+			$param = "general_api/train_change_seat";
+			$bookingCode = "?booking_code=".$this->input->get('bookingCode');
+			$kodeWagon = "&kode_wagon=".$this->input->get('kodeWagon');
+			$nomorKursi = "&nomor_kursi=".$this->input->get('nomorKursi');
+			$orderDetailId = "&order_detail_id=".$this->input->get('orderDetailId');
+			$key = "&token=".$this->session->userdata('train_token_session');
+			$format = "&output=json";
+
+			$request = $url.$param.$bookingCode.$kodeWagon.$nomorKursi.$orderDetailId.$key.$format;
+
+			$getResponse = $this->Request_Model->httpGet($request);
+			if($getResponse['status'] == 200) {
+				$getSeat = json_decode($getResponse['output'], true);
+
+				$data = array(
+					'error' => 0,
+					'msg' => 'Get seat data success',
+					'datas' => $getSeat['result'];
+				);
+
+				echo json_encode($data);
+			} else {
+				$data = array(
+					'error' => 500,
+					'msg' => 'Error 500',
+					'datas' => 0
+				);
+
+				echo json_encode($data);
+			}
+		}
 	}
 	public function Train_Checkout_Page_Request()
 	{
@@ -281,10 +515,53 @@ class TrainAPI extends CI_Controller {
 	}
 	public function Train_Search_Promo()
 	{
+		$url = $this->config->item('tiket_api_url_dev');
+		if(empty($this->session->userdata('train_token_session'))) {
+			$getToken = $url."apiv1/payexpress?method=getToken&secretkey=".$this->config->item('tiket_secret_key')."&output=json";
+			$getTokenResponse = $this->Request_Model->httpGet($getToken);
+			if($getTokenResponse['status'] == 200) {
 
-	}
-	public function Train_Change_TrainSeat()
-	{
-		
+				$parsetoken = json_decode($getTokenResponse['output'], true);
+				$this->session->set_userdata('train_token_session', $parsetoken['token']);
+
+			}
+			
+		}
+
+		$validate_token = $this->Token_Model->validateToken($this->session->userdata('train_token_session'));
+
+		if($validate_token) { 
+			// TRUE
+			$param = "train_api/train_promo";
+			$departure = "?d=".$this->input->get('departureCode');
+			$dateGo = "&date=".$this->input->get('departureDate');
+			$key = "&token=".$this->session->userdata('train_token_session');
+			$format = "&output=json";
+
+			https://api-sandbox.tiket.com/train_api/train_promo?d=GMR&date=2012-06-28&token=4206f440696c91b855581fb2eafac225&output=json
+
+			$request = $url.$param.$departure.$dateGo.$key.$format;
+
+			$getResponse = $this->Request_Model->httpGet($request);
+			if($getResponse['status'] == 200) {
+				$getPromo = json_decode($getResponse['output'], true);
+
+				$data = array(
+					'error' => 0,
+					'msg' => 'Get seat data success',
+					'datas' => $getPromo;
+				);
+
+				echo json_encode($data);
+			} else {
+				$data = array(
+					'error' => 500,
+					'msg' => 'Error 500',
+					'datas' => 0
+				);
+
+				echo json_encode($data);
+			}
+		}
 	}
 }

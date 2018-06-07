@@ -313,7 +313,7 @@ class HotelAPI extends CI_Controller {
 
 		$validate_token = $this->Token_Model->validateToken($this->session->userdata('hotel_token_session'));
 
-		if($validate_token) {
+		if($validate_token) { 
 			// TRUE
 			$hotelData = $this->input->get('hotel');
 			$hotelExpl = explode('_', $hotelData);
@@ -639,8 +639,8 @@ class HotelAPI extends CI_Controller {
 
 			if($paymentMethodCode == 2) {
 				// Transfer Bank
-				// $methodeUrl = $url."checkout/checkout_payment/2?token=".$this->session->userdata('hotel_token_session')."&currency=IDR&btn_booking=1&output=json";
-				$methodeUrl = "http://localhost/abunawas/files/json-example/ForBankTransfer.json";
+				$methodeUrl = $url."checkout/checkout_payment/2?token=".$this->session->userdata('hotel_token_session')."&currency=IDR&btn_booking=1&output=json";
+				// $methodeUrl = "http://localhost/abunawas/files/json-example/ForBankTransfer.json";
 
 				$getResponse = $this->Request_Model->httpGet($methodeUrl);
 				if($getResponse['status'] == 200) {

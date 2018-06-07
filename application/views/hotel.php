@@ -323,7 +323,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				}
 			});
 
-			$("#ChooseHotel").click(function() {
+			$("#ChooseHotel").click(function() { 
 				// if($('input[name=pilHotel]:checked').val() === '' || $('input[name=pilHotel]:checked').val() === undefined) {
 				// 	alert('Pilih Kamar');
 				// } else {
